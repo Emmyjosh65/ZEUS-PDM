@@ -73,239 +73,165 @@
   <div id="app" style="display:none;">
     <nav id="sidebar" class="sidebar glass">
       <div class="sidebar-header"><div class="sidebar-logo">⚡ ZEUS</div><button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button></div>
-      <div class="sidebar-user"><div class="avatar" id="navAvatar">U</div><span id="navUsername">user</span></div>
-      <div class="sidebar-links">
-        <a href="#" class="nav-link active" onclick="go('home')"><i class="fas fa-home"></i><span>Home</span></a>
-        <a href="#" class="nav-link" onclick="go('marketplace')"><i class="fas fa-store"></i><span>Marketplace</span></a>
-        <a href="#" class="nav-link" onclick="go('categories')"><i class="fas fa-th-large"></i><span>Categories</span></a>
-        <a href="#" class="nav-link" onclick="go('orders')"><i class="fas fa-box"></i><span>My Orders</span></a>
-        <a href="#" class="nav-link" onclick="go('favorites')"><i class="fas fa-heart"></i><span>Favorites</span></a>
-        <a href="#" class="nav-link" onclick="go('wallet')"><i class="fas fa-wallet"></i><span>Wallet</span></a>
-        <a href="#" class="nav-link" onclick="go('support')"><i class="fas fa-headset"></i><span>Support</span></a>
-        <a href="#" class="nav-link" onclick="go('dashboard')"><i class="fas fa-user"></i><span>Dashboard</span></a>
+      <div class="sidebar-user" id="sidebarUser">
+        <div class="avatar" id="sidebarAvatar">U</div>
+        <div><div class="sidebar-username" id="sidebarUsername">user</div><div class="sidebar-role" id="sidebarRole">Member</div></div>
+      </div>
+      <div class="sidebar-menu">
+        <button class="sidebar-item active" onclick="showPage('marketplace')"><i class="fas fa-store"></i><span>Marketplace</span></button>
+        <button class="sidebar-item" onclick="showPage('dashboard')"><i class="fas fa-chart-simple"></i><span>Dashboard</span></button>
+        <button class="sidebar-item" onclick="showPage('wallet')"><i class="fas fa-wallet"></i><span>Wallet</span></button>
+        <button class="sidebar-item" onclick="showPage('orders')"><i class="fas fa-truck"></i><span>Orders</span></button>
+        <button class="sidebar-item" onclick="showPage('favorites')"><i class="fas fa-heart"></i><span>Favorites</span></button>
+        <button class="sidebar-item" onclick="showPage('support')"><i class="fas fa-headset"></i><span>Support</span></button>
+        <button class="sidebar-item" onclick="showPage('profile')"><i class="fas fa-user"></i><span>Profile</span></button>
+        <button class="sidebar-item" onclick="showPage('notifications')"><i class="fas fa-bell"></i><span>Notifications <span id="notifBadge" class="badge">0</span></span></button>
+        <button class="sidebar-item" id="adminBtnSidebar" onclick="openAdminPass()" style="display:none;"><i class="fas fa-shield-halved"></i><span>Admin Only</span></button>
       </div>
       <div class="sidebar-footer">
-        <button class="admin-btn" onclick="openAdminPass()"><i class="fas fa-shield"></i> Admin Only</button>
-        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        <label class="toggle-label"><i class="fas fa-moon"></i><span>Dark Mode</span><input type="checkbox" id="darkModeToggle" onchange="toggleTheme()" /><span class="toggle-slider"></span></label>
+        <button class="sidebar-item" onclick="logout()"><i class="fas fa-right-from-bracket"></i><span>Logout</span></button>
       </div>
     </nav>
 
-    <main id="mainContent" class="main-content">
-
-      <!-- HOME -->
-      <section id="page-home" class="page active">
-        <div class="welcome-hero glass">
-          <div class="welcome-logo">⚡</div>
-          <h1 class="welcome-title">Welcome to <span class="neon-blue">ZEUS</span></h1>
-          <p class="welcome-message">Welcome to <strong>ZEUS</strong> — the ultimate premium digital marketplace. We connect buyers and sellers of authentic digital products including social media accounts, domains, websites, source code, templates, graphics, courses, and more.</p>
-          <div class="welcome-details">
-            <div class="detail-card glass-sm"><i class="fas fa-credit-card"></i><h4>Payment Process</h4><p>Pay securely via OPay. Upload proof and our team will verify within 24 hours.</p></div>
-            <div class="detail-card glass-sm"><i class="fas fa-truck"></i><h4>Delivery Process</h4><p>Once payment is verified, products are delivered securely via your dashboard.</p></div>
-            <div class="detail-card glass-sm"><i class="fas fa-gavel"></i><h4>Rules & Refunds</h4><p>Sales are final for digital goods. Refunds if not delivered within 7 days.</p></div>
-            <div class="detail-card glass-sm"><i class="fas fa-headset"></i><h4>24/7 Support</h4><p>Contact us via tickets, live chat, or email. We're always ready to help.</p></div>
+    <main id="mainContent">
+      <!-- WELCOME -->
+      <section id="page-welcome" class="page active">
+        <div class="welcome-hero">
+          <div class="welcome-glow"></div>
+          <div class="welcome-badge">⚡ ZEUS</div>
+          <h1 class="welcome-title">Welcome to the Digital Universe</h1>
+          <p class="welcome-text">ZEUS is Nigeria's premium marketplace for digital products and services. Buy and sell social media accounts, Telegram channels, WhatsApp connections, websites, domains, software licenses, templates, and more. All transactions are secure, verified, and protected.</p>
+          <div class="welcome-features">
+            <div class="wf-item"><i class="fas fa-shield-halved"></i> Secure Payments</div>
+            <div class="wf-item"><i class="fas fa-bolt"></i> Instant Delivery</div>
+            <div class="wf-item"><i class="fas fa-headset"></i> 24/7 Support</div>
+            <div class="wf-item"><i class="fas fa-rotate-left"></i> 7-Day Refund</div>
           </div>
-          <button class="btn-primary" onclick="go('marketplace')"><i class="fas fa-store"></i> Browse Marketplace</button>
+          <button class="btn-primary" onclick="showPage('marketplace')"><i class="fas fa-store"></i> Enter Marketplace</button>
+          <div style="margin-top:16px;"><button class="link-btn" id="adminBtnWelcome" onclick="openAdminPass()">🔐 Admin Only (Skip if not admin)</button></div>
         </div>
       </section>
 
       <!-- MARKETPLACE -->
       <section id="page-marketplace" class="page">
-        <div class="page-header"><h1><i class="fas fa-store"></i> Marketplace</h1><div class="search-bar glass-sm"><i class="fas fa-search"></i><input type="text" id="marketSearch" placeholder="Search products..." oninput="filterProds()" /></div></div>
-        <div class="filter-bar glass-sm">
-          <select id="filterCategory" onchange="filterProds()"><option value="all">All Categories</option></select>
-          <select id="filterPrice" onchange="filterProds()"><option value="all">All Prices</option><option value="0-1000">₦0 - ₦1,000</option><option value="1000-5000">₦1,000 - ₦5,000</option><option value="5000-10000">₦5,000 - ₦10,000</option><option value="10000+">₦10,000+</option></select>
-          <select id="filterSort" onchange="filterProds()"><option value="newest">Newest</option><option value="oldest">Oldest</option><option value="lowest">Lowest Price</option><option value="highest">Highest Price</option><option value="rating">Highest Rated</option></select>
+        <div class="page-header">
+          <h2><i class="fas fa-store"></i> Marketplace</h2>
+          <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="marketSearch" placeholder="Search digital assets..." oninput="renderMarket()" /></div>
         </div>
-        <div id="marketplaceGrid" class="product-grid"></div>
-        <div id="noProducts" class="empty-state" style="display:none;"><i class="fas fa-box-open"></i><h3>No Products Found</h3></div>
-      </section>
-
-      <!-- CATEGORIES -->
-      <section id="page-categories" class="page">
-        <div class="page-header"><h1><i class="fas fa-th-large"></i> Categories</h1></div>
-        <div id="categoriesGrid" class="categories-grid"></div>
-      </section>
-
-      <!-- PRODUCT DETAIL -->
-      <section id="page-product" class="page" style="display:none;">
-        <button class="link-btn" onclick="go('marketplace')"><i class="fas fa-arrow-left"></i> Back</button>
-        <div id="productDetail" class="product-detail glass" style="margin-top:16px;"></div>
-      </section>
-
-      <!-- CHECKOUT -->
-      <section id="page-checkout" class="page" style="display:none;">
-        <button class="link-btn" onclick="go('marketplace')"><i class="fas fa-arrow-left"></i> Back</button>
-        <div class="checkout-container glass" style="margin-top:16px;">
-          <h2><i class="fas fa-shopping-cart"></i> Checkout</h2>
-          <div id="checkoutProduct" class="checkout-product"></div>
-          <div class="payment-info glass-sm">
-            <h3>Payment Instructions</h3>
-            <div class="bank-details">
-              <p><strong>Bank:</strong> OPay</p>
-              <p><strong>Account Name:</strong> CHRISTIANA GODWIN OKON</p>
-              <p><strong>Account Number:</strong> <span class="highlight">9066760078</span> <button class="copy-btn" onclick="copyText('9066760078')"><i class="fas fa-copy"></i></button></p>
-            </div>
-          </div>
-          <form id="paymentForm" onsubmit="submitPayment(event)">
-            <div class="form-grid">
-              <div class="input-group"><i class="fas fa-user input-icon"></i><input type="text" id="payFullName" placeholder="Full Name" required /></div>
-              <div class="input-group"><i class="fas fa-user-tag input-icon"></i><input type="text" id="payUsername" placeholder="Username" readonly /></div>
-              <div class="input-group"><i class="fas fa-tag input-icon"></i><input type="text" id="payProduct" placeholder="Product Purchased" readonly /></div>
-              <div class="input-group"><i class="fas fa-money-bill input-icon"></i><input type="number" id="payAmount" placeholder="Amount Paid" required /></div>
-              <div class="input-group"><i class="fas fa-hashtag input-icon"></i><input type="text" id="payRef" placeholder="Transaction Reference" required /></div>
-              <div class="input-group"><i class="fas fa-calendar input-icon"></i><input type="date" id="payDate" required /></div>
-            </div>
-            <div class="input-group"><i class="fas fa-comment input-icon"></i><textarea id="payNotes" placeholder="Additional Notes" rows="3"></textarea></div>
-            <div class="input-group file-group"><label><i class="fas fa-cloud-upload-alt"></i> Upload Payment Screenshot</label><input type="file" id="payScreenshot" accept="image/*" required /></div>
-            <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> I Have Made Payment</button>
-          </form>
+        <div class="categories-scroll" id="categoriesBar"></div>
+        <div class="market-filters">
+          <select id="filterCategory" onchange="renderMarket()"><option value="all">All Categories</option></select>
+          <select id="filterSort" onchange="renderMarket()"><option value="newest">Newest</option><option value="oldest">Oldest</option><option value="low">Lowest Price</option><option value="high">Highest Price</option></select>
         </div>
-      </section>
-
-      <!-- ORDERS -->
-      <section id="page-orders" class="page"><div class="page-header"><h1><i class="fas fa-box"></i> My Orders</h1></div><div id="ordersList" class="orders-list"></div></section>
-
-      <!-- FAVORITES -->
-      <section id="page-favorites" class="page"><div class="page-header"><h1><i class="fas fa-heart"></i> Favorites</h1></div><div id="favoritesGrid" class="product-grid"></div></section>
-
-      <!-- WALLET -->
-      <section id="page-wallet" class="page">
-        <div class="page-header"><h1><i class="fas fa-wallet"></i> Wallet</h1></div>
-        <div class="wallet-container glass">
-          <div class="wallet-balance glass-sm"><p>Available Balance</p><h2>₦<span id="walletBalance">0.00</span></h2></div>
-          <div class="wallet-actions"><button class="btn-primary" onclick="showToast('Deposit coming soon!','info')"><i class="fas fa-arrow-down"></i> Deposit</button><button class="btn-secondary" onclick="showToast('Withdrawal coming soon!','info')"><i class="fas fa-arrow-up"></i> Withdraw</button></div>
-          <h3>Transaction History</h3><div id="walletHistory" class="wallet-history"></div>
-        </div>
-      </section>
-
-      <!-- SUPPORT -->
-      <section id="page-support" class="page">
-        <div class="page-header"><h1><i class="fas fa-headset"></i> Support Center</h1></div>
-        <div class="support-container">
-          <div class="support-card glass-sm" onclick="showToast('Live Chat connecting...','info')"><i class="fas fa-comment-dots"></i><h3>Live Chat</h3><p>Chat with support</p></div>
-          <div class="support-card glass-sm" onclick="go('faq')"><i class="fas fa-question-circle"></i><h3>FAQ</h3><p>Frequently asked questions</p></div>
-          <div class="support-card glass-sm" onclick="openTicket()"><i class="fas fa-ticket-alt"></i><h3>Submit Ticket</h3><p>Create a support ticket</p></div>
-          <div class="support-card glass-sm" onclick="go('tickets')"><i class="fas fa-list"></i><h3>My Tickets</h3><p>View tickets</p></div>
-        </div>
-        <h3>FAQ</h3><div id="faqList" class="faq-list"></div>
+        <div class="products-grid" id="marketGrid"></div>
       </section>
 
       <!-- DASHBOARD -->
       <section id="page-dashboard" class="page">
-        <div class="page-header"><h1><i class="fas fa-user"></i> Dashboard</h1></div>
-        <div class="dashboard-grid">
-          <div class="dash-card glass-sm" onclick="go('profile')"><i class="fas fa-id-card"></i><span>Profile</span></div>
-          <div class="dash-card glass-sm" onclick="go('orders')"><i class="fas fa-shopping-bag"></i><span>Purchases</span></div>
-          <div class="dash-card glass-sm" onclick="go('favorites')"><i class="fas fa-heart"></i><span>Favorites</span></div>
-          <div class="dash-card glass-sm" onclick="go('notifications')"><i class="fas fa-bell"></i><span>Notifications</span></div>
-          <div class="dash-card glass-sm" onclick="go('wallet')"><i class="fas fa-wallet"></i><span>Wallet</span></div>
-          <div class="dash-card glass-sm" onclick="showToast('Messages coming soon!','info')"><i class="fas fa-envelope"></i><span>Messages</span></div>
-          <div class="dash-card glass-sm" onclick="go('support')"><i class="fas fa-headset"></i><span>Support</span></div>
-          <div class="dash-card glass-sm" onclick="toggleTheme()"><i class="fas fa-moon"></i><span>Dark Mode</span></div>
-          <div class="dash-card glass-sm" onclick="go('security')"><i class="fas fa-shield"></i><span>Security</span></div>
-          <div class="dash-card glass-sm" onclick="showToast('Share your referral link!','info')"><i class="fas fa-gift"></i><span>Referrals</span></div>
-          <div class="dash-card glass-sm" onclick="showToast('Downloads in Orders','info')"><i class="fas fa-download"></i><span>Downloads</span></div>
-          <div class="dash-card glass-sm" onclick="go('settings')"><i class="fas fa-cog"></i><span>Settings</span></div>
-        </div>
+        <div class="page-header"><h2><i class="fas fa-chart-simple"></i> Dashboard</h2></div>
+        <div class="dash-stats" id="dashStats"></div>
+        <div class="dash-recent"><h3>Recent Activity</h3><div id="dashActivity"></div></div>
       </section>
 
-      <!-- ADMIN -->
-      <section id="page-admin" class="page" style="display:none;">
-        <div class="page-header"><h1><i class="fas fa-shield-halved"></i> Admin Dashboard</h1></div>
-        <div class="admin-stats grid-4">
-          <div class="stat-card glass-sm"><h3 id="statUsers">0</h3><p>Users</p></div>
-          <div class="stat-card glass-sm"><h3 id="statProducts">0</h3><p>Products</p></div>
-          <div class="stat-card glass-sm"><h3 id="statPending">0</h3><p>Pending</p></div>
-          <div class="stat-card glass-sm"><h3 id="statRevenue">₦0</h3><p>Revenue</p></div>
+      <!-- WALLET -->
+      <section id="page-wallet" class="page">
+        <div class="page-header"><h2><i class="fas fa-wallet"></i> Wallet</h2></div>
+        <div class="wallet-card glass">
+          <div class="wallet-balance"><span class="wallet-label">Balance</span><span class="wallet-amount" id="walletAmount">₦0</span></div>
+          <div class="wallet-actions"><button class="btn-primary" onclick="showToast('Deposit feature coming soon!','info')"><i class="fas fa-plus"></i> Deposit</button><button class="btn-secondary" onclick="showToast('Withdraw feature coming soon!','info')"><i class="fas fa-arrow-up"></i> Withdraw</button></div>
         </div>
-        <div class="admin-tabs">
-          <button class="admin-tab active" onclick="adminTab('payments')">Payments</button>
-          <button class="admin-tab" onclick="adminTab('orders')">Orders</button>
-          <button class="admin-tab" onclick="adminTab('users')">Users</button>
-          <button class="admin-tab" onclick="adminTab('products')">Products</button>
-          <button class="admin-tab" onclick="adminTab('analytics')">Analytics</button>
-          <button class="admin-tab" onclick="adminTab('tickets')">Tickets</button>
-          <button class="admin-tab" onclick="adminTab('announce')">Announcements</button>
-        </div>
-        <div id="adminContent" class="admin-content"></div>
+        <h3 style="margin-top:20px;">Transaction History</h3><div id="walletHistory"></div>
+      </section>
+
+      <!-- ORDERS -->
+      <section id="page-orders" class="page">
+        <div class="page-header"><h2><i class="fas fa-truck"></i> Orders</h2></div>
+        <div id="ordersList"></div>
+      </section>
+
+      <!-- FAVORITES -->
+      <section id="page-favorites" class="page">
+        <div class="page-header"><h2><i class="fas fa-heart"></i> Favorites</h2></div>
+        <div class="products-grid" id="favoritesGrid"></div>
+      </section>
+
+      <!-- SUPPORT -->
+      <section id="page-support" class="page">
+        <div class="page-header"><h2><i class="fas fa-headset"></i> Support</h2></div>
+        <div class="support-tabs"><button class="support-tab active" onclick="switchSupport('faq')">FAQ</button><button class="support-tab" onclick="switchSupport('tickets')">Tickets</button><button class="support-tab" onclick="switchSupport('contact')">Contact</button></div>
+        <div id="faqContent" class="support-content active"></div>
+        <div id="ticketsContent" class="support-content"></div>
+        <div id="contactContent" class="support-content"></div>
       </section>
 
       <!-- PROFILE -->
-      <section id="page-profile" class="page" style="display:none;">
-        <button class="link-btn" onclick="go('dashboard')"><i class="fas fa-arrow-left"></i> Back</button>
-        <div class="profile-container glass" style="margin-top:16px;">
-          <div class="profile-avatar"><div class="avatar-lg" id="profileAvatar">U</div></div>
-          <div class="profile-info">
-            <div class="input-group"><label>Full Name</label><input type="text" id="profileName" /></div>
-            <div class="input-group"><label>Username</label><input type="text" id="profileUsername" readonly /></div>
-            <div class="input-group"><label>Email</label><input type="email" id="profileEmail" /></div>
-            <div class="input-group"><label>Phone</label><input type="tel" id="profilePhone" /></div>
-            <button class="btn-primary" onclick="updateProfile()"><i class="fas fa-save"></i> Update Profile</button>
-          </div>
-        </div>
+      <section id="page-profile" class="page">
+        <div class="page-header"><h2><i class="fas fa-user"></i> Profile</h2></div>
+        <div class="profile-card glass"><div class="profile-avatar" id="profileAvatar">U</div><h3 id="profileNameDisplay">User</h3><p id="profileEmailDisplay">email@example.com</p></div>
+        <form onsubmit="updateProfile(event)" style="margin-top:20px;display:flex;flex-direction:column;gap:12px;">
+          <div class="input-group"><i class="fas fa-user input-icon"></i><input type="text" id="profileName" placeholder="Full Name" /></div>
+          <div class="input-group"><i class="fas fa-envelope input-icon"></i><input type="email" id="profileEmail" placeholder="Email" /></div>
+          <div class="input-group"><i class="fas fa-phone input-icon"></i><input type="tel" id="profilePhone" placeholder="Phone" /></div>
+          <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Update Profile</button>
+        </form>
       </section>
 
       <!-- NOTIFICATIONS -->
-      <section id="page-notifications" class="page" style="display:none;"><div class="page-header"><h1><i class="fas fa-bell"></i> Notifications</h1></div><div id="notificationsList" class="notifications-list"></div></section>
+      <section id="page-notifications" class="page">
+        <div class="page-header"><h2><i class="fas fa-bell"></i> Notifications</h2><button class="btn-secondary" onclick="clearNotifs()">Clear All</button></div>
+        <div id="notificationsList"></div>
+      </section>
 
-      <!-- SETTINGS -->
-      <section id="page-settings" class="page" style="display:none;">
-        <button class="link-btn" onclick="go('dashboard')"><i class="fas fa-arrow-left"></i> Back</button>
-        <div class="settings-container glass" style="margin-top:16px;">
-          <h2>Settings</h2>
-          <div class="setting-item"><span><i class="fas fa-moon"></i> Dark Mode</span><label class="switch"><input type="checkbox" id="darkModeToggle" onchange="toggleTheme()" /><span class="slider"></span></label></div>
-          <div class="setting-item"><span><i class="fas fa-bell"></i> Push Notifications</span><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
-          <div class="setting-item"><span><i class="fas fa-envelope"></i> Email Notifications</span><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
-          <button class="btn-danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      <!-- ADMIN DASHBOARD -->
+      <section id="page-admin" class="page">
+        <div class="page-header"><h2><i class="fas fa-shield-halved"></i> Admin Dashboard</h2></div>
+        <div class="admin-tabs">
+          <button class="admin-tab active" onclick="switchAdmin('dashboard')">Overview</button>
+          <button class="admin-tab" onclick="switchAdmin('payments')">Payments</button>
+          <button class="admin-tab" onclick="switchAdmin('orders')">Orders</button>
+          <button class="admin-tab" onclick="switchAdmin('users')">Users</button>
+          <button class="admin-tab" onclick="switchAdmin('products')">Products</button>
+          <button class="admin-tab" onclick="switchAdmin('announce')">Announce</button>
+          <button class="admin-tab" onclick="switchAdmin('tickets')">Tickets</button>
+          <button class="admin-tab" onclick="switchAdmin('analytics')">Analytics</button>
         </div>
-      </section>
-
-      <!-- SECURITY -->
-      <section id="page-security" class="page" style="display:none;">
-        <button class="link-btn" onclick="go('dashboard')"><i class="fas fa-arrow-left"></i> Back</button>
-        <div class="settings-container glass" style="margin-top:16px;">
-          <h2>Security</h2>
-          <div class="setting-item"><span><i class="fas fa-shield"></i> Two-Factor Authentication</span><label class="switch"><input type="checkbox" id="tfaToggle" onchange="showToast(this.checked?'2FA Enabled':'2FA Disabled',this.checked?'success':'info')" /><span class="slider"></span></label></div>
-          <div class="setting-item"><span><i class="fas fa-key"></i> Change Password</span><button class="btn-secondary" onclick="showToast('Reset link sent!','success')">Reset</button></div>
-          <div class="setting-item"><span><i class="fas fa-history"></i> Sessions</span><button class="btn-secondary" onclick="showToast('Sessions cleared','success')">Clear</button></div>
-        </div>
-      </section>
-
-      <!-- FAQ -->
-      <section id="page-faq" class="page" style="display:none;">
-        <button class="link-btn" onclick="go('support')"><i class="fas fa-arrow-left"></i> Back</button>
-        <h1>FAQ</h1>
-        <div id="faqFullList" class="faq-list"></div>
-      </section>
-
-      <!-- TICKETS -->
-      <section id="page-tickets" class="page" style="display:none;">
-        <button class="link-btn" onclick="go('support')"><i class="fas fa-arrow-left"></i> Back</button>
-        <div class="page-header"><h1>My Tickets</h1><button class="btn-primary" onclick="openTicket()"><i class="fas fa-plus"></i> New Ticket</button></div>
-        <div id="ticketsList" class="tickets-list"></div>
+        <div id="adminContent"></div>
       </section>
     </main>
-
-    <nav class="bottom-nav glass">
-      <a href="#" class="bottom-link active" onclick="go('home')"><i class="fas fa-home"></i><span>Home</span></a>
-      <a href="#" class="bottom-link" onclick="go('marketplace')"><i class="fas fa-store"></i><span>Shop</span></a>
-      <a href="#" class="bottom-link" onclick="go('categories')"><i class="fas fa-th-large"></i><span>Categories</span></a>
-      <a href="#" class="bottom-link" onclick="go('orders')"><i class="fas fa-box"></i><span>Orders</span></a>
-      <a href="#" class="bottom-link" onclick="go('dashboard')"><i class="fas fa-user"></i><span>Account</span></a>
-    </nav>
   </div>
 
-  <!-- TICKET MODAL -->
-  <div id="ticketModal" class="modal-overlay" style="display:none;">
+  <!-- PAYMENT MODAL -->
+  <div id="paymentModal" class="modal-overlay" style="display:none;">
     <div class="modal-glass" style="max-width:500px;">
-      <button class="modal-close" onclick="closeModal('ticketModal')"><i class="fas fa-times"></i></button>
-      <h2>Submit Ticket</h2>
-      <form onsubmit="submitTicket(event)">
-        <div class="input-group"><input type="text" id="ticketSubject" placeholder="Subject" required /></div>
-        <div class="input-group"><select id="ticketPriority"><option value="LOW">Low</option><option value="NORMAL" selected>Normal</option><option value="HIGH">High</option><option value="URGENT">Urgent</option></select></div>
-        <div class="input-group"><textarea id="ticketDescription" placeholder="Describe your issue..." rows="5" required></textarea></div>
-        <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Submit</button>
+      <button class="modal-close" onclick="closeModal('paymentModal')"><i class="fas fa-times"></i></button>
+      <h2>📥 Complete Payment</h2>
+      <div class="payment-details glass-sm">
+        <p><strong>Bank:</strong> OPay</p>
+        <p><strong>Account Name:</strong> CHRISTIANA GODWIN OKON</p>
+        <p><strong>Account Number:</strong> 9066760078 <button class="link-btn" onclick="copyText('9066760078')">Copy</button></p>
+        <p><strong>WhatsApp:</strong> 09066760078 <button class="link-btn" onclick="copyText('09066760078')">Copy</button></p>
+      </div>
+      <form id="paymentForm" onsubmit="submitPayment(event)">
+        <input type="hidden" id="payProductId" />
+        <div class="input-group"><input type="text" id="payName" placeholder="Full Name" required /></div>
+        <div class="input-group"><input type="text" id="payUsername" placeholder="Your Username" required /></div>
+        <div class="input-group"><input type="text" id="payProduct" placeholder="Product Purchased" readonly /></div>
+        <div class="input-group"><input type="number" id="payAmount" placeholder="Amount Paid" required /></div>
+        <div class="input-group"><input type="text" id="payRef" placeholder="Transaction Reference" required /></div>
+        <div class="input-group"><input type="date" id="payDate" required /></div>
+        <div class="input-group"><textarea id="payNotes" placeholder="Additional Notes" rows="2"></textarea></div>
+        <div class="input-group"><label>Upload Payment Screenshot:</label><input type="file" id="payScreenshot" accept="image/*" /></div>
+        <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Submit Payment</button>
       </form>
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAIL MODAL -->
+  <div id="productModal" class="modal-overlay" style="display:none;">
+    <div class="modal-glass" style="max-width:600px;">
+      <button class="modal-close" onclick="closeModal('productModal')"><i class="fas fa-times"></i></button>
+      <div id="productDetail"></div>
     </div>
   </div>
 
