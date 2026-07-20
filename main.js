@@ -1,10 +1,9 @@
 /* ============================================
    ZEUS PDM v2 — Firebase Edition
-   Real-time sync across all devices
-   Google Sign-In + Email Verification
+   Updated: Complete Social Media Price List
    ============================================ */
 
-// ====== FIREBASE CONFIG (Your Project) ======
+// ====== FIREBASE CONFIG ======
 var firebaseConfig = {
   apiKey: "AIzaSyDeYimmmxGHwX8884bYvRd5zCFDFkl155M",
   authDomain: "zeus-pdm.firebaseapp.com",
@@ -19,7 +18,6 @@ firebase.initializeApp(firebaseConfig);
 var auth = firebase.auth();
 var db = firebase.firestore();
 
-// Enable offline + multi-tab sync
 db.enablePersistence({ synchronizeTabs: true }).catch(function(err) {
   console.log('Firestore persistence:', err.code);
 });
@@ -149,48 +147,168 @@ function startListeners() {
   });
 }
 
-// ====== SEED PRODUCTS (runs once) ======
+// ====== SEED PRODUCTS ======
 function seedProducts() {
   db.collection('products').limit(1).get().then(function(snap) {
-    if (!snap.empty) return;
-    var products = [
-      { lid:'0001', title:'Facebook Profile (1 Year Active)', cat:'Facebook Profile', price:1000, desc:'Aged Facebook profile, 1 year old, active user with posts. Transfer permitted. Email and password included. Good for advertising and networking.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.5, seller:'zeus_admin', date:new Date(Date.now() - 1*86400000).toISOString(), sales:0 },
-      { lid:'0002', title:'Facebook Profile (2 Years Aged)', cat:'Facebook Profile', price:2000, desc:'Well-established Facebook profile with 2 years of activity. Friends, photos, timeline intact.', img:'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.8, seller:'zeus_admin', date:new Date(Date.now() - 2*86400000).toISOString(), sales:0 },
-      { lid:'0003', title:'Instagram Business Profile', cat:'Instagram Business', price:2500, desc:'Instagram business account with followers and engagement. Perfect for affiliate marketing.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:2, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date(Date.now() - 3*86400000).toISOString(), sales:0 },
-      { lid:'0004', title:'Telegram Channel (1,000+ Members)', cat:'Telegram Channel', price:3000, desc:'Active Telegram channel with 1000+ real members. Niche topic with high engagement.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.7, seller:'zeus_admin', date:new Date(Date.now() - 4*86400000).toISOString(), sales:0 },
-      { lid:'0005', title:'Telegram Account (Aged 2 Years)', cat:'Telegram Account', price:1500, desc:'Aged Telegram account with groups and contacts. Includes cloud chat history.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.3, seller:'zeus_admin', date:new Date(Date.now() - 5*86400000).toISOString(), sales:0 },
-      { lid:'0006', title:'WhatsApp Account (Business Ready)', cat:'WhatsApp Account', price:1800, desc:'WhatsApp account ready for business use. Verified with SMS. Can be linked to WhatsApp Business API.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.9, seller:'zeus_admin', date:new Date(Date.now() - 6*86400000).toISOString(), sales:0 },
-      { lid:'0007', title:'TikTok Creator Account (5K Followers)', cat:'TikTok Account', price:3500, desc:'TikTok creator account with 5,000+ followers. Monetization eligible.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:2, status:'Available', rating:4.4, seller:'zeus_admin', date:new Date(Date.now() - 7*86400000).toISOString(), sales:0 },
-      { lid:'0008', title:'Facebook Business Page (10K Likes)', cat:'Facebook Page', price:4000, desc:'Facebook business page with 10,000+ page likes. Admin access transferred.', img:'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=300&fit=crop', days:2, status:'Available', rating:4.5, seller:'zeus_admin', date:new Date(Date.now() - 8*86400000).toISOString(), sales:0 },
-      { lid:'0009', title:'Twitter/X Account (Aged + Followers)', cat:'Twitter Account', price:2000, desc:'Aged Twitter/X account with organic followers. Good reputation score.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.2, seller:'zeus_admin', date:new Date(Date.now() - 9*86400000).toISOString(), sales:0 },
-      { lid:'0010', title:'YouTube Channel (1,000 Subs)', cat:'YouTube Channel', price:5000, desc:'YouTube channel with 1,000+ subscribers. Monetization eligible. Full admin access.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:3, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date(Date.now() - 10*86400000).toISOString(), sales:0 },
-      { lid:'0011', title:'LinkedIn Premium Account', cat:'LinkedIn Account', price:3000, desc:'LinkedIn Premium account with sales navigator. Great for B2B.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.7, seller:'zeus_admin', date:new Date(Date.now() - 11*86400000).toISOString(), sales:0 },
-      { lid:'0012', title:'TikTok Music Promotion (5K Plays)', cat:'Promotion Services', price:2500, desc:'Promote your music on TikTok with 5,000+ guaranteed plays.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:2, status:'Available', rating:4.3, seller:'zeus_admin', date:new Date(Date.now() - 12*86400000).toISOString(), sales:0 },
-      { lid:'0013', title:'Instagram Story Ads Design', cat:'Design Services', price:1500, desc:'Professional Instagram Story ad design. Animated or static.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.8, seller:'zeus_admin', date:new Date(Date.now() - 13*86400000).toISOString(), sales:0 },
-      { lid:'0014', title:'Snapchat Account (Aged)', cat:'Snapchat Account', price:1200, desc:'Aged Snapchat account with streaks and friends.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.1, seller:'zeus_admin', date:new Date(Date.now() - 14*86400000).toISOString(), sales:0 },
-      { lid:'0015', title:'Facebook Group (5K Members)', cat:'Facebook Group', price:3500, desc:'Facebook group with 5,000+ members in a specific niche.', img:'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=300&fit=crop', days:2, status:'Available', rating:4.4, seller:'zeus_admin', date:new Date(Date.now() - 15*86400000).toISOString(), sales:0 },
-      { lid:'0016', title:'Pinterest Business Account', cat:'Pinterest Account', price:1800, desc:'Pinterest business account with boards and followers.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.5, seller:'zeus_admin', date:new Date(Date.now() - 16*86400000).toISOString(), sales:0 },
-      { lid:'0017', title:'WhatsApp Group Invites (100)', cat:'Promotion Services', price:2000, desc:'100 WhatsApp group invite links in your niche.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date(Date.now() - 17*86400000).toISOString(), sales:0 },
-      { lid:'0018', title:'Telegram Stars / Premium', cat:'Telegram Account', price:2500, desc:'Telegram account with premium features.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.3, seller:'zeus_admin', date:new Date(Date.now() - 18*86400000).toISOString(), sales:0 },
-      { lid:'0019', title:'TikTok Followers (1,000)', cat:'Growth Services', price:1500, desc:'1,000 real TikTok followers. No password needed.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:3, status:'Available', rating:4.2, seller:'zeus_admin', date:new Date(Date.now() - 19*86400000).toISOString(), sales:0 },
-      { lid:'0020', title:'Instagram Followers (500)', cat:'Growth Services', price:1000, desc:'500 real Instagram followers. Safe delivery.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:2, status:'Available', rating:4.0, seller:'zeus_admin', date:new Date(Date.now() - 20*86400000).toISOString(), sales:0 },
-      { lid:'0021', title:'Domain + Hosting (1 Year)', cat:'Web Services', price:8000, desc:'Custom domain + hosting for 1 year. SSL included.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:2, status:'Available', rating:4.9, seller:'zeus_admin', date:new Date(Date.now() - 21*86400000).toISOString(), sales:0 },
-      { lid:'0022', title:'Email Marketing List (500 Leads)', cat:'Marketing Services', price:3000, desc:'500 targeted email leads in your niche. Verified emails.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.4, seller:'zeus_admin', date:new Date(Date.now() - 22*86400000).toISOString(), sales:0 },
-      { lid:'0023', title:'Logo Design (Professional)', cat:'Design Services', price:5000, desc:'Professional logo design with 3 concepts. Vector files.', img:'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=300&fit=crop', days:3, status:'Available', rating:4.8, seller:'zeus_admin', date:new Date(Date.now() - 23*86400000).toISOString(), sales:0 },
-      { lid:'0024', title:'Facebook Ads Manager Setup', cat:'Marketing Services', price:2000, desc:'Professional Facebook Ads Manager setup. Pixel installation.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.5, seller:'zeus_admin', date:new Date(Date.now() - 24*86400000).toISOString(), sales:0 },
-      { lid:'0025', title:'Discord Server Setup (Custom)', cat:'Web Services', price:3000, desc:'Custom Discord server setup with bots, roles, channels.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:2, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date(Date.now() - 25*86400000).toISOString(), sales:0 },
-      { lid:'0026', title:'Facebook Post Engagement (50)', cat:'Promotion Services', price:1000, desc:'50 real Facebook post engagements (likes, comments, shares).', img:'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.1, seller:'zeus_admin', date:new Date(Date.now() - 26*86400000).toISOString(), sales:0 },
-      { lid:'0027', title:'TikTok Live Stream Setup', cat:'Marketing Services', price:2500, desc:'Complete TikTok live stream setup with OBS configuration.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.7, seller:'zeus_admin', date:new Date(Date.now() - 27*86400000).toISOString(), sales:0 },
-      { lid:'0028', title:'Viral Video Script (Custom)', cat:'Design Services', price:1500, desc:'Custom viral video script tailored to your niche.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.4, seller:'zeus_admin', date:new Date(Date.now() - 28*86400000).toISOString(), sales:0 }
-    ];
-    var batch = db.batch();
-    products.forEach(function(p) {
-      var ref = db.collection('products').doc();
-      p.id = ref.id;
-      batch.set(ref, p);
-    });
-    batch.commit().then(function() { console.log('Products seeded'); });
+    if (!snap.empty) {
+      // Check if products match the new price list - if not, delete and re-seed
+      var needsUpdate = false;
+      snap.forEach(function(doc) {
+        var p = docToObj(doc);
+        if (p.price !== 4000 && p.lid === '0001') needsUpdate = true;
+      });
+      if (!needsUpdate) return; // Already seeded with correct prices
+      
+      // Delete all existing products
+      db.collection('products').get().then(function(all) {
+        var batch = db.batch();
+        all.forEach(function(doc) { batch.delete(doc.ref); });
+        batch.commit().then(function() {
+          insertProducts();
+        });
+      });
+      return;
+    }
+    insertProducts();
   }).catch(function() {});
+}
+
+function insertProducts() {
+  var products = [
+    // ====== WHATSAPP ======
+    { lid:'0001', title:'WhatsApp Permanent Account', cat:'WhatsApp', price:4000, desc:'Permanent WhatsApp account, choose your country. Email and password included. Full access. Ready for business use.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.8, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0002', title:'WhatsApp Temporary Account', cat:'WhatsApp', price:2500, desc:'Temporary WhatsApp account, choose your country. SMS verified. Works for short-term use and promotions.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.5, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== FACEBOOK ======
+    { lid:'0003', title:'Facebook Permanent Account', cat:'Facebook', price:3500, desc:'Permanent Facebook account. Email verified, profile photo, friends. Ready for marketing and networking.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.7, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0004', title:'Facebook Temporary Account', cat:'Facebook', price:2000, desc:'Temporary Facebook account for short-term campaigns. Basic profile created and ready.', img:'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.3, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+    { lid:'0005', title:'Facebook Aged Account', cat:'Facebook', price:5500, desc:'Aged Facebook account with 2+ years of activity. Friends, photos, timeline history intact. Trusted and established.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.9, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Aged' },
+    { lid:'0006', title:'Facebook Business Manager Account', cat:'Facebook', price:6500, desc:'Facebook Business Manager account ready for ad management. Create and manage ads, pages, and pixels. Verified.', img:'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=300&fit=crop', days:2, status:'Available', rating:4.8, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Business' },
+
+    // ====== INSTAGRAM ======
+    { lid:'0007', title:'Instagram Permanent Account', cat:'Instagram', price:3500, desc:'Permanent Instagram account with profile photo, bio, and posts. Ready for content creation and marketing.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0008', title:'Instagram Temporary Account', cat:'Instagram', price:2000, desc:'Temporary Instagram account. Quick setup for short-term campaigns or testing.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.2, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+    { lid:'0009', title:'Instagram Aged Account', cat:'Instagram', price:5000, desc:'Aged Instagram account with followers and posts. Established profile with engagement history.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.7, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Aged' },
+
+    // ====== TELEGRAM ======
+    { lid:'0010', title:'Telegram Permanent Account', cat:'Telegram', price:3500, desc:'Permanent Telegram account. Access to groups and channels. Cloud chat history preserved.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.7, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0011', title:'Telegram Temporary Account', cat:'Telegram', price:2000, desc:'Temporary Telegram account for short-term use. Quick setup, SMS verified.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.3, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== TIKTOK ======
+    { lid:'0012', title:'TikTok Permanent Account', cat:'TikTok', price:3500, desc:'Permanent TikTok account. Ready for content creation and following trends. Profile set up.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.5, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0013', title:'TikTok Temporary Account', cat:'TikTok', price:2000, desc:'Temporary TikTok account for short campaigns or testing the platform.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.1, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+    { lid:'0014', title:'TikTok Aged Account', cat:'TikTok', price:5000, desc:'Aged TikTok account with videos and followers. Established presence. Monetization eligible.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:2, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Aged' },
+
+    // ====== SNAPCHAT ======
+    { lid:'0015', title:'Snapchat Permanent Account', cat:'Snapchat', price:3500, desc:'Permanent Snapchat account. Snap score, streaks, friends included. Memories preserved.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.4, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0016', title:'Snapchat Temporary Account', cat:'Snapchat', price:2000, desc:'Temporary Snapchat account for short-term use. Basic setup.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.0, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== X (TWITTER) ======
+    { lid:'0017', title:'X (Twitter) Permanent Account', cat:'X (Twitter)', price:3500, desc:'Permanent X (Twitter) account. Tweets, followers, profile set up. Ready for engagement.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.5, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0018', title:'X (Twitter) Temporary Account', cat:'X (Twitter)', price:2000, desc:'Temporary X (Twitter) account for short campaigns and testing.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.1, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+    { lid:'0019', title:'X (Twitter) Aged Account', cat:'X (Twitter)', price:5000, desc:'Aged X (Twitter) account with tweet history and followers. Established reputation.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.7, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Aged' },
+
+    // ====== DISCORD ======
+    { lid:'0020', title:'Discord Permanent Account', cat:'Discord', price:3500, desc:'Permanent Discord account. Member of active servers. Nitro ready. Developer mode enabled.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0021', title:'Discord Temporary Account', cat:'Discord', price:2000, desc:'Temporary Discord account for short-term use in servers and communities.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.2, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== LINKEDIN ======
+    { lid:'0022', title:'LinkedIn Permanent Account', cat:'LinkedIn', price:4500, desc:'Permanent LinkedIn account with professional profile. Connections, recommendations. Premium ready.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.7, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0023', title:'LinkedIn Temporary Account', cat:'LinkedIn', price:3000, desc:'Temporary LinkedIn account for short-term networking and job search.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.3, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+    { lid:'0024', title:'LinkedIn Aged Account', cat:'LinkedIn', price:6500, desc:'Aged LinkedIn account with 500+ connections. Years of activity. Strong professional network.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.9, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Aged' },
+
+    // ====== PINTEREST ======
+    { lid:'0025', title:'Pinterest Permanent Account', cat:'Pinterest', price:3000, desc:'Permanent Pinterest account with boards, pins, and followers. Great for traffic and inspiration.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.4, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0026', title:'Pinterest Temporary Account', cat:'Pinterest', price:2000, desc:'Temporary Pinterest account for short-term pinning and testing.', img:'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.0, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== REDDIT ======
+    { lid:'0027', title:'Reddit Permanent Account', cat:'Reddit', price:3500, desc:'Permanent Reddit account with karma. Active in communities. Established username.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.5, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0028', title:'Reddit Temporary Account', cat:'Reddit', price:2000, desc:'Temporary Reddit account for posting and commenting.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.1, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+    { lid:'0029', title:'Reddit Aged Account', cat:'Reddit', price:5000, desc:'Aged Reddit account with significant karma and post history. Trusted and established.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.7, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Aged' },
+
+    // ====== STEAM ======
+    { lid:'0030', title:'Steam Permanent Account', cat:'Steam', price:5000, desc:'Permanent Steam account with game library. Level, badges, friends list. Full access.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0031', title:'Steam Temporary Account', cat:'Steam', price:3000, desc:'Temporary Steam account for gaming sessions and testing.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.2, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== EPIC GAMES ======
+    { lid:'0032', title:'Epic Games Permanent Account', cat:'Epic Games', price:5000, desc:'Permanent Epic Games account with game library. Free games claimed. Full access.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.5, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0033', title:'Epic Games Temporary Account', cat:'Epic Games', price:3000, desc:'Temporary Epic Games account for game access.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.1, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== RIOT GAMES ======
+    { lid:'0034', title:'Riot Games Permanent Account', cat:'Riot Games', price:5000, desc:'Permanent Riot Games account (League of Legends, Valorant). Skins, rank, champions.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0035', title:'Riot Games Temporary Account', cat:'Riot Games', price:3000, desc:'Temporary Riot Games account for gaming sessions.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.2, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== PLAYSTATION (PSN) ======
+    { lid:'0036', title:'PlayStation Network Permanent Account', cat:'PlayStation Network', price:6000, desc:'Permanent PSN account. Trophies, friends, game library. PlayStation Plus ready.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.7, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0037', title:'PlayStation Network Temporary Account', cat:'PlayStation Network', price:4000, desc:'Temporary PSN account for gaming access.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.3, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== XBOX LIVE ======
+    { lid:'0038', title:'Xbox Live Permanent Account', cat:'Xbox Live', price:6000, desc:'Permanent Xbox Live account. Gamerscore, achievements, friends. Game Pass ready.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.7, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0039', title:'Xbox Live Temporary Account', cat:'Xbox Live', price:4000, desc:'Temporary Xbox Live account for gaming.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.3, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== NINTENDO ======
+    { lid:'0040', title:'Nintendo Permanent Account', cat:'Nintendo', price:5500, desc:'Permanent Nintendo account. Game purchases, friends, online access. Nintendo Switch ready.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0041', title:'Nintendo Temporary Account', cat:'Nintendo', price:3500, desc:'Temporary Nintendo account for gaming access.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.2, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== GMAIL ======
+    { lid:'0042', title:'Gmail Permanent Account', cat:'Gmail', price:3500, desc:'Permanent Gmail account. Full Google ecosystem access. Drive, Photos, YouTube included.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:0, status:'Available', rating:4.5, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0043', title:'Gmail Temporary Account', cat:'Gmail', price:2000, desc:'Temporary Gmail account for short-term use.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:0, status:'Available', rating:4.1, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+    { lid:'0044', title:'Gmail Aged Account', cat:'Gmail', price:5000, desc:'Aged Gmail account with years of history. Trusted for verifications and registrations.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:0, status:'Available', rating:4.8, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Aged' },
+
+    // ====== OUTLOOK ======
+    { lid:'0045', title:'Outlook Permanent Account', cat:'Outlook', price:3500, desc:'Permanent Outlook / Hotmail account. Microsoft ecosystem access. OneDrive, Office included.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:0, status:'Available', rating:4.5, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0046', title:'Outlook Temporary Account', cat:'Outlook', price:2000, desc:'Temporary Outlook account for short-term use.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:0, status:'Available', rating:4.0, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== YAHOO MAIL ======
+    { lid:'0047', title:'Yahoo Mail Permanent Account', cat:'Yahoo Mail', price:3000, desc:'Permanent Yahoo Mail account with storage. News, finance, and mail access.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:0, status:'Available', rating:4.3, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0048', title:'Yahoo Mail Temporary Account', cat:'Yahoo Mail', price:2000, desc:'Temporary Yahoo Mail account.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:0, status:'Available', rating:3.9, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== YOUTUBE ======
+    { lid:'0049', title:'YouTube Permanent Channel Account', cat:'YouTube', price:4500, desc:'Permanent YouTube channel account. Channel created, ready for content. Custom URL available.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0050', title:'YouTube Temporary Account', cat:'YouTube', price:2500, desc:'Temporary YouTube account for commenting and testing.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:0, status:'Available', rating:4.2, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== PAYPAL ======
+    { lid:'0051', title:'PayPal Verified Account', cat:'PayPal', price:12000, desc:'Fully verified PayPal account. Email, phone, bank verified. Ready for transactions. Top tier quality.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:2, status:'Available', rating:4.9, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Verified' },
+    { lid:'0052', title:'PayPal Unverified Account', cat:'PayPal', price:6000, desc:'Unverified PayPal account. Email confirmed. Basic account ready for use.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.5, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Unverified' },
+
+    // ====== WISE ======
+    { lid:'0053', title:'Wise Verified Account', cat:'Wise', price:15000, desc:'Fully verified Wise (TransferWise) account. Multi-currency account. Send and receive globally.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:3, status:'Available', rating:4.8, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Verified' },
+
+    // ====== AMAZON ======
+    { lid:'0054', title:'Amazon Buyer Account', cat:'Amazon', price:5000, desc:'Amazon buyer account with purchase history. Prime eligible. One-click buying enabled.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Buyer' },
+    { lid:'0055', title:'Amazon Seller Account', cat:'Amazon', price:15000, desc:'Amazon seller account ready for selling. FBM/FBA capable. High-value professional account.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:3, status:'Available', rating:4.9, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Seller' },
+
+    // ====== EBAY ======
+    { lid:'0056', title:'eBay Buyer Account', cat:'eBay', price:4500, desc:'eBay buyer account with bidding history. Verified. Ready for purchases.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.5, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Buyer' },
+    { lid:'0057', title:'eBay Seller Account', cat:'eBay', price:12000, desc:'eBay seller account. Listings, feedback, seller dashboard. Ready for e-commerce.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:3, status:'Available', rating:4.7, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Seller' },
+
+    // ====== GITHUB ======
+    { lid:'0058', title:'GitHub Permanent Account', cat:'GitHub', price:3500, desc:'Permanent GitHub account with repositories. Developer profile. Perfect for collaboration and portfolio.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:0, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+
+    // ====== ROBLOX ======
+    { lid:'0059', title:'Roblox Permanent Account', cat:'Roblox', price:4000, desc:'Permanent Roblox account with avatar, items, and game access. Robux ready.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.5, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Permanent' },
+    { lid:'0060', title:'Roblox Temporary Account', cat:'Roblox', price:2500, desc:'Temporary Roblox account for gaming.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:1, status:'Available', rating:4.1, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Temporary' },
+
+    // ====== SPOTIFY ======
+    { lid:'0061', title:'Spotify Premium Ready Account', cat:'Spotify', price:3500, desc:'Spotify Premium account ready for streaming. Ad-free music, offline downloads, high quality audio.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:0, status:'Available', rating:4.7, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Premium' },
+
+    // ====== NETFLIX ======
+    { lid:'0062', title:'Netflix Premium Profile', cat:'Netflix', price:3000, desc:'Netflix Premium profile. 4K streaming, multiple screens, full access to all content.', img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', days:0, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Premium' },
+
+    // ====== DISNEY+ ======
+    { lid:'0063', title:'Disney+ Premium Profile', cat:'Disney+', price:3000, desc:'Disney+ Premium profile. Marvel, Star Wars, Pixar, National Geographic. Unlimited streaming.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:0, status:'Available', rating:4.6, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Premium' },
+
+    // ====== APPLE MUSIC ======
+    { lid:'0064', title:'Apple Music Premium Account', cat:'Apple Music', price:3500, desc:'Apple Music premium account. Full catalog, spatial audio, lossless streaming. Ad-free.', img:'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&h=300&fit=crop', days:0, status:'Available', rating:4.7, seller:'zeus_admin', date:new Date().toISOString(), sales:0, type:'Premium' }
+  ];
+
+  var batch = db.batch();
+  products.forEach(function(p) {
+    var ref = db.collection('products').doc();
+    p.id = ref.id;
+    batch.set(ref, p);
+  });
+  batch.commit().then(function() { console.log('✅ All ' + products.length + ' products seeded!'); });
 }
 
 // ====== AUTH FUNCTIONS ======
@@ -254,11 +372,9 @@ function login(e) {
   if (isEmail) {
     auth.signInWithEmailAndPassword(username, password)
       .then(function(cred) { handleLoginSuccess(cred.user); })
-      .catch(function(err) { showToast('Invalid email or password. Try demo_user / User@123456', 'error'); });
+      .catch(function(err) { showToast('Invalid email or password', 'error'); });
   } else {
-    // Check demo user
     if (username === 'demo_user' && password === 'User@123456') {
-      // Sign in to demo account or create it
       auth.signInWithEmailAndPassword('demo@zeus.demo.com', password).catch(function() {
         return auth.createUserWithEmailAndPassword('demo@zeus.demo.com', password).then(function(cred) {
           return db.collection('users').doc(cred.user.uid).set({
@@ -267,10 +383,7 @@ function login(e) {
           });
         });
       }).then(function() { return auth.signInWithEmailAndPassword('demo@zeus.demo.com', password); })
-      .then(function(cred) {
-        handleLoginSuccess(cred.user);
-        showToast('Welcome Demo User! You have NGN 100,000 wallet', 'success');
-      });
+      .then(function(cred) { handleLoginSuccess(cred.user); showToast('Welcome! You have NGN 100,000 wallet', 'success'); });
       return;
     }
     db.collection('users').where('username', '==', username).get()
@@ -282,7 +395,7 @@ function login(e) {
         return auth.signInWithEmailAndPassword(u.email, password);
       })
       .then(function(cred) { if (cred && cred.user) handleLoginSuccess(cred.user); })
-      .catch(function(err) { showToast('Login failed. Try demo_user / User@123456', 'error'); });
+      .catch(function(err) { showToast('Login failed', 'error'); });
   }
 }
 
@@ -424,10 +537,10 @@ function renderMarket() {
     if (STATE.currentUser) { for (var f = 0; f < STATE.favorites.length; f++) { if (STATE.favorites[f].pid === p.id && STATE.favorites[f].uid === STATE.currentUser.uid) { inFav = true; break; } } }
     grid.innerHTML += '<div class="product-card" onclick="showDetail(\'' + p.id + '\')">' +
       '<img class="product-img" src="' + p.img + '" alt="..." loading="lazy" onerror="this.src=\'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop\'" />' +
-      '<div class="product-body"><div class="product-cat">' + p.cat + '</div>' +
+      '<div class="product-body"><div class="product-cat">' + p.cat + ' <span style="font-size:10px;color:var(--text-muted);">(' + (p.type||'') + ')</span></div>' +
       '<div class="product-title">' + p.title + '</div>' +
       '<div class="product-price">NGN ' + p.price.toLocaleString() + '</div>' +
-      '<div class="product-meta"><span class="product-rating">' + stars + '</span><span class="product-status">' + (p.days||1) + ' day</span></div>' +
+      '<div class="product-meta"><span class="product-rating">' + stars + '</span><span class="product-status">' + (p.days||1) + ' day delivery</span></div>' +
       '<div class="product-actions"><button class="btn-primary" style="flex:1;padding:8px;font-size:12px;" onclick="event.stopPropagation();buyProduct(\'' + p.id + '\')"><i class="fas fa-shopping-cart"></i> Buy</button>' +
       '<button class="btn-secondary" style="padding:8px 12px;font-size:12px;" onclick="event.stopPropagation();toggleFav(\'' + p.id + '\')"><i class="fas ' + (inFav ? 'fa-heart' : 'fa-heart-o') + '" style="color:' + (inFav ? 'var(--danger)' : '') + '"></i></button></div></div></div>';
   }
@@ -473,7 +586,7 @@ function showDetail(id) {
   if (STATE.currentUser) { for (var f = 0; f < STATE.favorites.length; f++) { if (STATE.favorites[f].pid === p.id && STATE.favorites[f].uid === STATE.currentUser.uid) { inFav = true; break; } } }
   document.getElementById('detailContent').innerHTML =
     '<img src="' + p.img + '" style="width:100%;height:200px;object-fit:cover;border-radius:12px;margin-bottom:16px;" onerror="this.src=\'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop\'" />' +
-    '<div class="product-cat">' + p.cat + '</div>' +
+    '<div class="product-cat">' + p.cat + ' - ' + (p.type||'') + '</div>' +
     '<h3 style="margin:8px 0;">' + p.title + '</h3>' +
     '<div style="font-size:24px;font-weight:700;color:var(--neon-green);margin-bottom:12px;">NGN ' + p.price.toLocaleString() + '</div>' +
     '<div style="display:flex;gap:12px;font-size:13px;color:var(--text-muted);margin-bottom:12px;"><span class="product-rating">' + stars + '</span><span>Delivery: ' + (p.days||1) + ' day(s)</span><span>' + (p.sales||0) + ' sold</span></div>' +
@@ -554,7 +667,7 @@ function processPayment(e) {
       db.collection('notifications').add({ uid: 'admin', msg: 'New order #' + orderNum + ' from ' + STATE.currentUser.username + ': ' + p.title + ' (NGN ' + p.price.toLocaleString() + ')', type: 'info', read: false, date: new Date().toISOString() });
       STATE.currentUser.wallet = newBalance;
       closeModal('paymentModal');
-      showToast('Order #' + orderNum + ' created! Admin will deliver.', 'success');
+      showToast('Order #' + orderNum + ' created!', 'success');
       updateUI();
     }).catch(function(err) { showToast('Error: ' + err.message, 'error'); });
 }
@@ -608,7 +721,7 @@ function submitDeposit(e) {
       closeModal('depositModal');
       document.getElementById('depAmount').value = '';
       document.getElementById('depRef').value = '';
-      showToast('Deposit submitted! Admin will verify.', 'success');
+      showToast('Deposit submitted!', 'success');
       db.collection('notifications').add({ uid: 'admin', msg: 'New deposit: NGN ' + amount.toLocaleString() + ' from ' + STATE.currentUser.username + ' (Ref: ' + ref + ')', type: 'info', read: false, date: new Date().toISOString() });
     });
 }
@@ -631,7 +744,7 @@ function submitWithdraw(e) {
       document.getElementById('witAmount').value = '';
       document.getElementById('witWhatsapp').value = '';
       document.getElementById('witName').value = '';
-      showToast('Withdrawal requested! Admin will process.', 'success');
+      showToast('Withdrawal requested!', 'success');
       db.collection('notifications').add({ uid: 'admin', msg: 'New withdrawal: NGN ' + amount.toLocaleString() + ' to ' + name + ' (' + whatsapp + ')', type: 'info', read: false, date: new Date().toISOString() });
       updateUI();
     });
@@ -878,7 +991,7 @@ function openDelivery(id) {
   document.getElementById('deliveryOrderId').value = id;
   document.getElementById('deliveryWhatsapp').value = wa;
   document.getElementById('deliveryLogin').value = '';
-  document.getElementById('deliveryMessage').value = 'Your login details for ' + o.product + ' are ready. Thank you for your purchase!';
+  document.getElementById('deliveryMessage').value = 'Your login details for ' + o.product + ' are ready!';
   document.getElementById('deliveryModal').style.display = 'flex';
 }
 
@@ -899,7 +1012,7 @@ function sendDelivery(e) {
       var o = docToObj(doc);
       db.collection('notifications').add({ uid: o.uid, msg: 'Your order ' + o.product + ' has been delivered! Login details: ' + login, type: 'success', read: false, date: new Date().toISOString() });
       closeModal('deliveryModal');
-      showToast('Delivered! WhatsApp sent.', 'success');
+      showToast('Delivered!', 'success');
       var clean = wa.replace('+','').replace(/[^0-9]/g,'');
       window.open('https://wa.me/' + clean + '?text=' + encodeURIComponent(msg + '\n\nLogin Details:\n' + login + '\n\n- ZEUS Admin'), '_blank');
     });
@@ -928,10 +1041,10 @@ function waU(uid) {
 function adminProducts() {
   var c = document.getElementById('adminContent');
   if (!c) return;
-  var html = '<h3>Products (' + STATE.products.length + ')</h3><div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>ID</th><th>Title</th><th>Price</th><th>Category</th><th>Status</th></tr></thead><tbody>';
+  var html = '<h3>Products (' + STATE.products.length + ')</h3><div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>ID</th><th>Category</th><th>Title</th><th>Type</th><th>Price</th></tr></thead><tbody>';
   for (var i = 0; i < STATE.products.length; i++) {
     var p = STATE.products[i];
-    html += '<tr><td>#' + p.lid + '</td><td>' + p.title + '</td><td>NGN ' + p.price.toLocaleString() + '</td><td>' + p.cat + '</td><td><span style="color:' + (p.status==='Available'?'var(--success)':'var(--text-muted)') + '">' + p.status + '</span></td></tr>';
+    html += '<tr><td>#' + p.lid + '</td><td>' + p.cat + '</td><td>' + p.title + '</td><td>' + (p.type||'') + '</td><td>NGN ' + p.price.toLocaleString() + '</td></tr>';
   }
   html += '</tbody></table></div>'; c.innerHTML = html;
 }
@@ -991,7 +1104,6 @@ function createAnn(e) {
   var content = document.getElementById('annContent').value.trim();
   if (!title || !content) { showToast('Fill all fields', 'error'); return; }
   db.collection('announcements').add({ title: title, content: content, date: new Date().toISOString() }).then(function() {
-    // Notify all users
     var batch = db.batch();
     STATE.users.forEach(function(u) {
       var ref = db.collection('notifications').doc();
@@ -1033,7 +1145,7 @@ function exportCSV(type) {
   var data, filename;
   if (type === 'users') { data = STATE.users.map(function(u){return{Username:u.username,Email:u.email,WhatsApp:u.whatsapp||'',Role:u.role||'user',Balance:'NGN '+(u.wallet||0)}}); filename='zeus_users.csv'; }
   else if (type === 'orders') { data = STATE.orders.map(function(o){return{Order:o.num,Product:o.product,Buyer:o.buyerName,Amount:'NGN '+o.amount,Status:o.status}}); filename='zeus_orders.csv'; }
-  else if (type === 'products') { data = STATE.products.map(function(p){return{ID:p.lid,Title:p.title,Price:'NGN '+p.price,Category:p.cat,Status:p.status}}); filename='zeus_products.csv'; }
+  else if (type === 'products') { data = STATE.products.map(function(p){return{ID:p.lid,Category:p.cat,Title:p.title,Type:p.type||'',Price:'NGN '+p.price}}); filename='zeus_products.csv'; }
   else return;
   if (!data || !data.length) { showToast('No data', 'info'); return; }
   var headers = Object.keys(data[0]);
@@ -1056,10 +1168,8 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { var
 
 // ====== INIT ======
 (function init() {
-  // Check if user is already signed in
   auth.onAuthStateChanged(function(user) {
     if (user) {
-      // User is signed in — load profile
       db.collection('users').doc(user.uid).get().then(function(doc) {
         if (doc.exists) {
           STATE.currentUser = docToObj(doc);
@@ -1071,15 +1181,13 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { var
         }
       });
     } else {
-      // Not signed in — show auth
       document.getElementById('authModal').style.display = 'flex';
     }
     setTimeout(hideLoading, 1200);
   });
 
   seedProducts();
-  console.log('ZEUS PDM v2 — Firebase Edition loaded');
-  console.log('Demo login: demo_user / User@123456');
-  console.log('Admin: Set role=admin in Firestore for your account');
-  console.log('WhatsApp: 09066760078');
+  console.log('ZEUS PDM — ' + STATE.products.length + ' products loaded');
+  console.log('Demo: demo_user / User@123456');
+  console.log('WhatsApp Admin: 09066760078');
 })();
