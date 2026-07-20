@@ -6,88 +6,58 @@
   <title>ZEUS PDM — Digital Marketplace</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 <body>
+
 <div id="loadingScreen">
   <div class="loader"></div>
   <p>ZEOS INITIALIZING...</p>
 </div>
-
 <div id="toastContainer"></div>
 
-<!-- ===== AUTH MODAL ===== -->
-<div id="authModal" class="modal-overlay" style="display:flex;">
-  <div class="auth-card glass">
+<!-- AUTH MODAL -->
+<div id="authModal">
+  <div class="auth-card">
     <div class="auth-header">
-      <img src="https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=80&h=80&fit=crop" alt="ZEUS" style="width:50px;height:50px;border-radius:50%;object-fit:cover;margin-bottom:8px;">
-      <h2 style="color:var(--neon-gold);margin:0;">⚡ ZEUS PDM</h2>
-      <p style="font-size:12px;color:var(--text-muted);">Social & Digital Marketplace</p>
+      <img src="https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=80&h=80&fit=crop" alt="ZEUS">
+      <h2>⚡ ZEUS PDM</h2>
+      <p style="font-size:13px;color:var(--text-muted);">Social & Digital Marketplace</p>
     </div>
-
     <div class="auth-tabs">
       <span class="auth-tab active" onclick="switchAuth('login')">SIGN IN</span>
       <span class="auth-tab" onclick="switchAuth('create')">CREATE</span>
     </div>
-
-    <!-- LOGIN -->
     <form id="loginForm" onsubmit="login(event)">
-      <div class="input-group">
-        <i class="fas fa-user"></i>
-        <input type="text" id="loginUsername" placeholder="Email or Username" required />
-      </div>
-      <div class="input-group">
-        <i class="fas fa-lock"></i>
-        <input type="password" id="loginPassword" placeholder="Password" required />
-      </div>
+      <div class="input-group"><i class="fas fa-user"></i><input type="text" id="loginUsername" placeholder="Email or Username" required></div>
+      <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="Password" required></div>
       <button type="submit" class="btn-primary"><i class="fas fa-sign-in-alt"></i> SIGN IN</button>
-      <div style="text-align:center;margin:12px 0;"><span style="color:var(--text-muted);font-size:13px;">— OR —</span></div>
+      <div style="text-align:center;margin:10px 0;"><span style="color:var(--text-muted);font-size:13px;">— OR —</span></div>
       <button type="button" class="btn-google" onclick="googleSignIn()"><i class="fab fa-google"></i> Sign in with Google</button>
-      <p style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-muted);">Don't have an account? <a href="#" onclick="switchAuth('create');return false;" style="color:var(--neon-blue);">Create one</a></p>
-      <p style="text-align:center;margin-top:4px;font-size:11px;color:var(--text-muted);">Demo: <code>demo_user / User@123456</code></p>
+      <p style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-muted);">No account? <a href="#" onclick="switchAuth('create');return false;" style="color:var(--neon-blue);">Create one</a></p>
+      <p style="text-align:center;font-size:11px;color:var(--text-muted);">Demo: <code>demo_user / User@123456</code></p>
     </form>
-
-    <!-- REGISTER -->
     <form id="registerForm" onsubmit="register(event)" style="display:none;">
-      <div class="input-group">
-        <i class="fas fa-user"></i>
-        <input type="text" id="regUsername" placeholder="Username" required />
-      </div>
-      <div class="input-group">
-        <i class="fas fa-envelope"></i>
-        <input type="email" id="regEmail" placeholder="Email" required />
-      </div>
-      <div class="input-group">
-        <i class="fab fa-whatsapp"></i>
-        <input type="tel" id="regWhatsapp" placeholder="WhatsApp number (e.g., 2349012345678)" required />
-      </div>
-      <div class="input-group">
-        <i class="fas fa-lock"></i>
-        <input type="password" id="regPassword" placeholder="Password (8+ characters)" required />
-      </div>
-      <div class="input-group">
-        <i class="fas fa-check-circle"></i>
-        <input type="password" id="regConfirm" placeholder="Confirm password" required />
-      </div>
+      <div class="input-group"><i class="fas fa-user"></i><input type="text" id="regUsername" placeholder="Username" required></div>
+      <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="regEmail" placeholder="Email" required></div>
+      <div class="input-group"><i class="fab fa-whatsapp"></i><input type="tel" id="regWhatsapp" placeholder="WhatsApp (e.g. 2349012345678)" required></div>
+      <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="regPassword" placeholder="Password (8+ chars)" required></div>
+      <div class="input-group"><i class="fas fa-check-circle"></i><input type="password" id="regConfirm" placeholder="Confirm password" required></div>
       <button type="submit" class="btn-primary"><i class="fas fa-user-plus"></i> CREATE ACCOUNT</button>
       <p style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-muted);">Already registered? <a href="#" onclick="switchAuth('login');return false;" style="color:var(--neon-blue);">Sign in</a></p>
     </form>
-
-    <!-- VERIFY NOTICE -->
     <div id="verifyNotice" style="display:none;text-align:center;padding:20px;">
       <i class="fas fa-envelope" style="font-size:40px;color:var(--neon-gold);margin-bottom:12px;"></i>
-      <p>Verification email sent! Check your inbox and click the link, then refresh this page.</p>
+      <p>Verification email sent! Check your inbox and click the link, then refresh.</p>
       <button class="btn-primary" onclick="location.reload()" style="margin-top:12px;">I verified, refresh</button>
     </div>
   </div>
 </div>
 
-<!-- ===== APP ===== -->
+<!-- APP -->
 <div id="app" style="display:none;">
-  <!-- TOP BAR -->
   <header id="topBar">
     <button id="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
     <div class="top-logo">⚡ ZEUS PDM</div>
@@ -101,7 +71,6 @@
     </div>
   </header>
 
-  <!-- SIDEBAR -->
   <nav id="sidebar">
     <div class="sidebar-profile">
       <div id="sidebarAvatar" class="avatar">U</div>
@@ -126,9 +95,7 @@
     </ul>
   </nav>
 
-  <!-- MAIN CONTENT -->
   <main id="mainContent">
-
     <!-- HOME -->
     <div id="page-welcome" class="page active">
       <div class="hero">
@@ -142,11 +109,11 @@
         <button class="btn-primary" onclick="showPage('marketplace')"><i class="fas fa-store"></i> Browse Marketplace</button>
       </div>
       <section style="padding:16px;">
-        <h3>Featured Products</h3>
+        <h3 style="margin-bottom:12px;">Featured Products</h3>
         <div id="featuredGrid" class="product-grid"></div>
       </section>
       <section id="announcementSection" style="padding:16px;display:none;">
-        <h3>Announcements</h3>
+        <h3 style="margin-bottom:12px;">Announcements</h3>
         <div id="announcementList"></div>
       </section>
     </div>
@@ -169,25 +136,25 @@
 
     <!-- WALLET -->
     <div id="page-wallet" class="page">
-      <div class="wallet-card glass">
+      <div class="wallet-card">
         <div class="wallet-icon"><i class="fas fa-wallet"></i></div>
         <div class="wallet-label">Available Balance</div>
         <div id="walletBalance" class="wallet-amount">NGN 0</div>
-        <div style="display:flex;gap:8px;margin-top:16px;">
+        <div style="display:flex;gap:8px;margin-top:16px;position:relative;z-index:1;">
           <button class="btn-primary" onclick="showDeposit()"><i class="fas fa-arrow-down"></i> Deposit</button>
           <button class="btn-secondary" onclick="showWithdraw()"><i class="fas fa-arrow-up"></i> Withdraw</button>
         </div>
       </div>
-      <div class="bank-info glass">
+      <div class="bank-info">
         <h4>Bank Transfer Details</h4>
         <p><strong>Bank:</strong> OPay</p>
         <p><strong>Account Name:</strong> CHRISTIANA GODWIN OKON</p>
         <p><strong>Account Number:</strong> <span class="copy-text" onclick="copyText('9066760078')">9066760078 <i class="fas fa-copy" style="font-size:12px;"></i></span></p>
-        <p><strong>WhatsApp:</strong> <a href="https://wa.me/23409066760078" target="_blank">09066760078</a></p>
-        <p style="font-size:12px;color:var(--text-muted);margin-top:8px;">After transfer, click Deposit and submit the reference number. Admin will verify.</p>
+        <p><strong>WhatsApp:</strong> <a href="https://wa.me/23409066760078" target="_blank" style="color:var(--neon-blue);">09066760078</a></p>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:8px;">After transfer, click Deposit and submit the reference.</p>
       </div>
-      <div style="padding:16px;">
-        <h4>Transaction History</h4>
+      <div style="padding:0 16px;">
+        <h4 style="margin-bottom:12px;">Transaction History</h4>
         <div id="walletHistory"></div>
       </div>
     </div>
@@ -201,33 +168,26 @@
     <!-- FAVORITES -->
     <div id="page-favorites" class="page">
       <div class="page-header"><h2>My Favorites</h2></div>
-      <div id="favList"></div>
+      <div id="favList" style="padding:0 16px;"></div>
     </div>
 
     <!-- SUPPORT -->
     <div id="page-support" class="page">
       <div class="page-header"><h2>Support</h2></div>
-      <form onsubmit="submitTicket(event)" class="glass" style="padding:16px;margin-bottom:16px;">
-        <div class="input-group"><i class="fas fa-tag"></i><input type="text" id="ticketSubject" placeholder="Subject" required /></div>
-        <div class="input-group"><i class="fas fa-flag"></i>
-          <select id="ticketPriority">
-            <option value="LOW">Low</option>
-            <option value="MEDIUM" selected>Medium</option>
-            <option value="HIGH">High</option>
-            <option value="URGENT">Urgent</option>
-          </select>
-        </div>
-        <div class="input-group"><i class="fas fa-comment"></i><textarea id="ticketMessage" placeholder="Describe your issue" rows="3" required></textarea></div>
+      <form onsubmit="submitTicket(event)" class="glass" style="padding:16px;margin:0 16px 16px;border-radius:var(--radius);">
+        <div class="input-group" style="margin-bottom:10px;"><i class="fas fa-tag"></i><input type="text" id="ticketSubject" placeholder="Subject" required></div>
+        <div class="input-group" style="margin-bottom:10px;"><i class="fas fa-flag"></i><select id="ticketPriority"><option value="LOW">Low</option><option value="MEDIUM" selected>Medium</option><option value="HIGH">High</option><option value="URGENT">Urgent</option></select></div>
+        <div class="input-group" style="margin-bottom:10px;"><i class="fas fa-comment"></i><textarea id="ticketMessage" placeholder="Describe your issue" rows="3" required></textarea></div>
         <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Submit Ticket</button>
       </form>
-      <div id="ticketList"></div>
+      <div id="ticketList" style="padding:0 16px;"></div>
     </div>
 
     <!-- PROFILE -->
     <div id="page-profile" class="page">
       <div class="page-header"><h2>Profile</h2></div>
-      <div class="glass" style="padding:20px;text-align:center;">
-        <div id="profileAvatar" class="avatar" style="width:72px;height:72px;font-size:32px;margin:0 auto 12px;">U</div>
+      <div class="glass" style="padding:20px;text-align:center;margin:0 16px;border-radius:var(--radius);">
+        <div id="profileAvatar" class="avatar" style="width:72px;height:72px;font-size:28px;margin:0 auto 12px;">U</div>
         <h3 id="profUsername">-</h3>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;font-size:14px;margin-top:16px;">
           <div><span style="color:var(--text-muted);">Email:</span><br><span id="profEmail">-</span></div>
@@ -236,7 +196,7 @@
           <div><span style="color:var(--text-muted);">Joined:</span><br><span id="profJoined">-</span></div>
         </div>
         <p style="margin-top:16px;font-size:13px;"><strong>Email Verified:</strong> <span id="profVerified" style="color:var(--warning);">No</span></p>
-        <button id="verifyBtn" class="btn-secondary" onclick="auth.currentUser.sendEmailVerification().then(function(){showToast('Sent!','success');}).catch(function(){showToast('Error','error');})"><i class="fas fa-envelope"></i> Send Verification Email</button>
+        <button id="verifyBtn" class="btn-secondary" style="width:auto;margin:8px auto 0;" onclick="if(auth.currentUser){auth.currentUser.sendEmailVerification().then(function(){showToast('Sent!','success');}).catch(function(){showToast('Error','error');})}"><i class="fas fa-envelope"></i> Send Verification Email</button>
       </div>
     </div>
 
@@ -245,18 +205,18 @@
       <div class="page-header"><h2>Messages</h2></div>
       <div id="chatMessages" class="chat-box"></div>
       <form onsubmit="sendChatMsg(event)" class="chat-input-row">
-        <input type="text" id="chatInput" placeholder="Type a message..." required />
-        <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i></button>
+        <input type="text" id="chatInput" placeholder="Type a message..." required>
+        <button type="submit" class="btn-primary" style="width:auto;padding:14px 18px;"><i class="fas fa-paper-plane"></i></button>
       </form>
     </div>
 
     <!-- NOTIFICATIONS -->
     <div id="page-notifications" class="page">
       <div class="page-header"><h2>Notifications</h2></div>
-      <div id="notifList"></div>
+      <div id="notifList" style="padding:0 16px;"></div>
     </div>
 
-    <!-- ADMIN DASHBOARD -->
+    <!-- ADMIN -->
     <div id="page-admin" class="page">
       <div class="page-header"><h2>Admin Dashboard</h2></div>
       <div class="admin-tabs">
@@ -271,46 +231,36 @@
         <span class="admin-tab" onclick="switchAdmin('broadcast')">Broadcast</span>
         <span class="admin-tab" onclick="switchAdmin('analytics')">Analytics</span>
       </div>
-      <div id="adminContent" style="padding:16px;"></div>
+      <div id="adminContent" style="padding:0 16px;"></div>
     </div>
-
   </main>
 </div>
 
-<!-- ===== MODALS ===== -->
+<!-- MODALS -->
 <div id="detailModal" class="modal-overlay" onclick="if(event.target===this)this.style.display='none';">
-  <div class="modal-content glass">
-    <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
-    <div id="detailContent"></div>
-  </div>
+  <div class="modal-content"><button class="modal-close" onclick="closeModal('detailModal')">&times;</button><div id="detailContent"></div></div>
 </div>
-
 <div id="paymentModal" class="modal-overlay" onclick="if(event.target===this)this.style.display='none';">
-  <div class="modal-content glass">
+  <div class="modal-content">
     <button class="modal-close" onclick="closeModal('paymentModal')">&times;</button>
     <h3 id="paymentTitle">Confirm Purchase</h3>
     <div id="paymentInfo"></div>
     <form onsubmit="processPayment(event)" style="margin-top:16px;">
-      <input type="hidden" id="paymentProductId" />
+      <input type="hidden" id="paymentProductId">
       <button type="submit" id="payBtn" class="btn-primary"><i class="fas fa-check"></i> Confirm Payment</button>
     </form>
     <div class="glass-sm" style="margin-top:12px;padding:12px;font-size:12px;">
       <p style="font-weight:600;">Or pay via bank transfer:</p>
       <p>OPay: 9066760078 (CHRISTIANA GODWIN OKON)</p>
-      <p>Send payment proof to <a href="https://wa.me/23409066760078" target="_blank">09066760078</a></p>
+      <p>Send proof to <a href="https://wa.me/23409066760078" target="_blank" style="color:var(--neon-blue);">09066760078</a></p>
     </div>
   </div>
 </div>
-
 <div id="orderModal" class="modal-overlay" onclick="if(event.target===this)this.style.display='none';">
-  <div class="modal-content glass">
-    <button class="modal-close" onclick="closeModal('orderModal')">&times;</button>
-    <div id="orderDetailContent"></div>
-  </div>
+  <div class="modal-content"><button class="modal-close" onclick="closeModal('orderModal')">&times;</button><div id="orderDetailContent"></div></div>
 </div>
-
 <div id="depositModal" class="modal-overlay" onclick="if(event.target===this)this.style.display='none';">
-  <div class="modal-content glass">
+  <div class="modal-content">
     <button class="modal-close" onclick="closeModal('depositModal')">&times;</button>
     <h3>Deposit Funds</h3>
     <div class="glass-sm" style="padding:12px;margin-bottom:12px;font-size:13px;">
@@ -319,42 +269,39 @@
       <p><strong>Account:</strong> 9066760078</p>
     </div>
     <form onsubmit="submitDeposit(event)">
-      <div class="input-group"><i class="fas fa-money-bill"></i><input type="number" id="depAmount" placeholder="Amount (NGN)" min="100" required /></div>
-      <div class="input-group"><i class="fas fa-hashtag"></i><input type="text" id="depRef" placeholder="Transaction Reference" required /></div>
+      <div class="input-group" style="margin-bottom:10px;"><i class="fas fa-money-bill"></i><input type="number" id="depAmount" placeholder="Amount (NGN)" min="100" required></div>
+      <div class="input-group" style="margin-bottom:10px;"><i class="fas fa-hashtag"></i><input type="text" id="depRef" placeholder="Transaction Reference" required></div>
       <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Submit Deposit</button>
     </form>
   </div>
 </div>
-
 <div id="withdrawModal" class="modal-overlay" onclick="if(event.target===this)this.style.display='none';">
-  <div class="modal-content glass">
+  <div class="modal-content">
     <button class="modal-close" onclick="closeModal('withdrawModal')">&times;</button>
     <h3>Withdraw Funds</h3>
     <form onsubmit="submitWithdraw(event)">
-      <div class="input-group"><i class="fas fa-money-bill"></i><input type="number" id="witAmount" placeholder="Amount (NGN)" min="100" required /></div>
-      <div class="input-group"><i class="fab fa-whatsapp"></i><input type="tel" id="witWhatsapp" placeholder="Your WhatsApp Number" required /></div>
-      <div class="input-group"><i class="fas fa-user"></i><input type="text" id="witName" placeholder="Full Name on Bank Account" required /></div>
+      <div class="input-group" style="margin-bottom:10px;"><i class="fas fa-money-bill"></i><input type="number" id="witAmount" placeholder="Amount (NGN)" min="100" required></div>
+      <div class="input-group" style="margin-bottom:10px;"><i class="fab fa-whatsapp"></i><input type="tel" id="witWhatsapp" placeholder="Your WhatsApp Number" required></div>
+      <div class="input-group" style="margin-bottom:10px;"><i class="fas fa-user"></i><input type="text" id="witName" placeholder="Full Name on Bank Account" required></div>
       <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Request Withdrawal</button>
     </form>
   </div>
 </div>
-
 <div id="deliveryModal" class="modal-overlay" onclick="if(event.target===this)this.style.display='none';">
-  <div class="modal-content glass">
+  <div class="modal-content">
     <button class="modal-close" onclick="closeModal('deliveryModal')">&times;</button>
     <h3>Deliver Order</h3>
     <div id="deliveryInfo" class="glass-sm" style="padding:12px;margin-bottom:12px;font-size:13px;"></div>
     <form onsubmit="sendDelivery(event)">
-      <input type="hidden" id="deliveryOrderId" />
-      <div class="input-group"><i class="fab fa-whatsapp"></i><input type="tel" id="deliveryWhatsapp" placeholder="Buyer WhatsApp" required /></div>
-      <div class="input-group"><i class="fas fa-key"></i><textarea id="deliveryLogin" placeholder="Login Credentials / Delivery Info" rows="3" required></textarea></div>
-      <div class="input-group"><i class="fas fa-comment"></i><textarea id="deliveryMessage" placeholder="Message (optional)" rows="2"></textarea></div>
+      <input type="hidden" id="deliveryOrderId">
+      <div class="input-group" style="margin-bottom:10px;"><i class="fab fa-whatsapp"></i><input type="tel" id="deliveryWhatsapp" placeholder="Buyer WhatsApp" required></div>
+      <div class="input-group" style="margin-bottom:10px;"><i class="fas fa-key"></i><textarea id="deliveryLogin" placeholder="Login Credentials" rows="3" required></textarea></div>
+      <div class="input-group" style="margin-bottom:10px;"><i class="fas fa-comment"></i><textarea id="deliveryMessage" placeholder="Message (optional)" rows="2"></textarea></div>
       <button type="submit" class="btn-primary"><i class="fab fa-whatsapp"></i> Send Delivery</button>
     </form>
   </div>
 </div>
 
-<!-- ===== SCRIPTS ===== -->
 <script src="main.js"></script>
 </body>
 </html>
