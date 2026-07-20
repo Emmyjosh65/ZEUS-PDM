@@ -844,5 +844,468 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'){var ms=docu
   seedProducts();
   console.log('ZEUS PDM v2 loaded - 64 products');
   console.log('Demo: demo_user / User@123456');
-  console.log('WhatsApp: 09066760078');
+  console.log('WhatsApp: 09066760078');/* ============================================
+   ZEUS LOGIN BOARD — User & Admin Login Management
+   ============================================ */
+
+// ====== LOGIN BOARD DATA HELPERS ======
+function getUserLogins() {
+  if (!STATE.currentUser) return [];
+  return STATE.orders.filter(function(o) {
+    return o.uid === STATE.currentUser.uid && o.deliveryLogin;
+  });
+}
+
+function getAllLogins() {
+  return STATE.orders.filter(function(o) {
+    return o.deliveryLogin;
+  });
+}
+
+// ====== LOGIN BOARD — USER VIEW ======
+function renderLoginBoard() {
+  var logins = getUserLogins();
+  var container = document.getElementById('loginBoardContent');
+  if (!container) return;
+
+  if (!STATE.currentUser) {
+    container.innerHTML = '<p style="color:var(--text-muted);padding:20px;text-align:center;">Sign in to view your logins.</p>';
+    return;
+  }
+
+  if (logins.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:40px 20px;">
+        <i class="fas fa-key" style="font-size:48px;color:var(--text-muted);margin-bottom:16px;opacity:0.3;"></i>
+        <p style="color:var(--text-muted);">No logins delivered yet.</p>
+        <p style="font-size:13px;color:var(--text-muted);opacity:0.7;">When you purchase a product, the admin will send your login here.</p>
+      </div>`;
+    return;
+  }
+
+  var html = '<div style="display:flex;flex-direction:column;gap:12px;">';
+  for (var i = logins.length - 1; i >= 0; i--) {
+    var o = logins[i];
+    var deliveredDate = o.deliveryDate ? new Date(o.deliveryDate).toLocaleDateString() : '—';
+    html += `
+      <div class="glass-card" style="padding:16px;border-left:3px solid var(--neon-blue);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+          <div>
+            <strong style="color:var(--neon-blue);font-size:15px;">${o.product || 'Product'}</strong>
+            <span style="display:inline-block;margin-left:8px;padding:2px 10px;border-radius:10px;background:rgba(0,255,136,0.15);color:var(--success);font-size:11px;">Delivered</span>
+          </div>
+          <span style="font-size:11px;color:var(--text-muted);">Order #${o.num || '—'} · ${deliveredDate}</span>
+        </div>
+        <div style="margin-top:12px;background:rgba(0,0,0,0.3);border-radius:8px;padding:12px;font-family:'Courier New',monospace;font-size:14px;word-break:break-all;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="color:var(--text);">${o.deliveryLogin}</span>
+            <button onclick="copyText('${o.deliveryLogin.replace(/'/g, "\\'")}')" style="background:none;border:none;color:var(--neon-blue);cursor:pointer;font-size:16px;padding:4px 8px;" title="Copy">
+              <i class="fas fa-copy"></i>
+            </button>
+          </div>
+        </div>
+        ${o.deliveryMsg ? `<p style="margin-top:8px;font-size:12px;color:var(--text-muted);"><i class="fas fa-comment"></i> ${o.deliveryMsg}</p>` : ''}
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+          <button onclick="copyText('${o.deliveryLogin.replace(/'/g, "\\'")}')" class="btn-sm" style="padding:6px 14px;border:1px solid var(--neon-blue);background:transparent;color:var(--neon-blue);border-radius:6px;cursor:pointer;font-size:12px;">
+            <i class="fas fa-copy"></i> Copy Login
+          </button>
+          <button onclick="openWhatsAppLogin('${o.deliveryLogin.replace(/'/g, "\\'")}')" class="btn-sm" style="padding:6px 14px;border:1px solid #25D366;background:transparent;color:#25D366;border-radius:6px;cursor:pointer;font-size:12px;">
+            <i class="fab fa-whatsapp"></i> Share via WhatsApp
+          </button>
+        </div>
+      </div>`;
+  }
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function openWhatsAppLogin(login) {
+  var wa = STATE.currentUser && STATE.currentUser.whatsapp ? STATE.currentUser.whatsapp : '';
+  if (wa) {
+    wa = wa.replace('+', '').replace(/[^0-9]/g, '');
+    window.open('https://wa.me/' + wa + '?text=' + encodeURIComponent('My login: ' + login), '_blank');
+  } else {
+    showToast('Update your WhatsApp in Profile first', 'info');
+  }
+}
+
+// ====== LOGIN BOARD — ADD TO NAV (Modifies sidebar) ======
+function addLoginBoardToNav() {
+  // Insert "My Logins" link into the sidebar/nav
+  var navItems = document.querySelectorAll('.sidebar a, .nav-menu a, [class*="nav"] a, .menu a');
+  var inserted = false;
+
+  // Find the Favorites or Orders link and insert after it
+  var targetLinks = document.querySelectorAll('a[onclick*="Favorites"], a[onclick*="Orders"], a[onclick*="favorites"], a[onclick*="orders"]');
+  var sidebar = document.querySelector('.sidebar, .nav-menu, .menu, [class*="sidebar"]');
+  
+  if (!sidebar) {
+    // Try to find any navigation list
+    var navLists = document.querySelectorAll('ul li a');
+    for (var i = 0; i < navLists.length; i++) {
+      if (navLists[i].textContent.trim() === 'Orders' || navLists[i].textContent.trim() === 'Favorites') {
+        var parentLi = navLists[i].parentNode;
+        var newLi = document.createElement('li');
+        newLi.innerHTML = '<a href="#" onclick="showLoginBoard();return false;"><i class="fas fa-key"></i> My Logins</a>';
+        parentLi.parentNode.insertBefore(newLi, parentLi.nextSibling);
+        inserted = true;
+        break;
+      }
+    }
+  }
+
+  if (!inserted && sidebar) {
+    // Check if "My Logins" already exists
+    if (sidebar.querySelector('[onclick*="showLoginBoard"]')) return;
+    
+    // Try to add after Account or Wallet section
+    var links = sidebar.querySelectorAll('a');
+    var lastLink = null;
+    for (var i = 0; i < links.length; i++) {
+      var txt = links[i].textContent.trim();
+      if (txt === 'Account' || txt === 'Wallet' || txt === 'Orders' || txt === 'Favorites') {
+        lastLink = links[i];
+      }
+    }
+    if (lastLink && lastLink.parentNode) {
+      var newLi = document.createElement('li');
+      if (lastLink.parentNode.tagName === 'LI') {
+        newLi = document.createElement('li');
+        newLi.innerHTML = '<a href="#" onclick="showLoginBoard();return false;"><i class="fas fa-key"></i> My Logins</a>';
+        lastLink.parentNode.parentNode.insertBefore(newLi, lastLink.parentNode.nextSibling);
+      } else {
+        newLi.innerHTML = '<a href="#" onclick="showLoginBoard();return false;"><i class="fas fa-key"></i> My Logins</a>';
+        lastLink.parentNode.appendChild(newLi);
+      }
+    }
+  }
+}
+
+// ====== LOGIN BOARD — SHOW SECTION ======
+function showLoginBoard() {
+  switchSection('loginBoard');
+  renderLoginBoard();
+}
+
+// ====== LOGIN BOARD — HTML SECTION (Add to your page body) ======
+function injectLoginBoardHTML() {
+  if (document.getElementById('loginBoardSection')) return;
+
+  var section = document.createElement('section');
+  section.id = 'loginBoardSection';
+  section.className = 'page-section';
+  section.style.display = 'none';
+  section.innerHTML = `
+    <div class="section-header">
+      <h2><i class="fas fa-key" style="color:var(--neon-blue);"></i> My Logins</h2>
+      <p style="color:var(--text-muted);font-size:13px;">All your purchased login credentials in one place</p>
+    </div>
+    <div id="loginBoardContent" style="margin-top:16px;"></div>
+  `;
+
+  // Insert before the footer or at end of main content area
+  var main = document.querySelector('main, .main-content, .content, #app');
+  if (main) {
+    main.appendChild(section);
+  } else {
+    document.body.appendChild(section);
+  }
+}
+
+// ====== SECTION SWITCH HELPER (if not already defined) ======
+if (typeof switchSection === 'undefined') {
+  window.switchSection = function(id) {
+    var sections = document.querySelectorAll('.page-section, [class*="section"]');
+    for (var i = 0; i < sections.length; i++) {
+      sections[i].style.display = 'none';
+    }
+    var target = document.getElementById(id + 'Section') || document.getElementById(id);
+    if (target) target.style.display = 'block';
+  };
+}
+
+// ====== ADMIN — LOGIN MANAGEMENT PANEL ======
+function adminLogins() {
+  var c = document.getElementById('adminContent');
+  if (!c) return;
+
+  var logins = getAllLogins();
+  var html = `
+    <h3 style="margin-bottom:16px;">
+      <i class="fas fa-key" style="color:var(--neon-blue);"></i> 
+      Login Management 
+      <span style="font-size:13px;font-weight:400;color:var(--text-muted);">(${logins.length} delivered)</span>
+    </h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:12px;">`;
+
+  if (logins.length === 0) {
+    html += `<div class="glass-sm" style="padding:20px;text-align:center;color:var(--text-muted);grid-column:1/-1;">
+      <i class="fas fa-inbox" style="font-size:32px;opacity:0.3;margin-bottom:8px;display:block;"></i>
+      No logins delivered yet. Use the Delivery system on orders to send logins.
+    </div>`;
+  } else {
+    for (var i = logins.length - 1; i >= 0; i--) {
+      var o = logins[i];
+      var buyerName = o.buyerName || 'Unknown';
+      html += `
+        <div class="glass-sm" style="padding:16px;border-left:3px solid var(--success);position:relative;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <strong style="color:var(--success);font-size:14px;">${o.product || 'Product'}</strong>
+            <span style="font-size:11px;color:var(--text-muted);">#${o.num || ''}</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">
+            <i class="fas fa-user"></i> ${buyerName} 
+            ${o.buyerWhatsapp ? `<a href="https://wa.me/${o.buyerWhatsapp.replace(/[^0-9]/g,'')}" target="_blank" style="color:#25D366;margin-left:4px;"><i class="fab fa-whatsapp"></i></a>` : ''}
+          </div>
+          <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:10px;font-family:'Courier New',monospace;font-size:12px;word-break:break-all;margin:8px 0;">
+            <span style="color:var(--text);">${o.deliveryLogin}</span>
+          </div>
+          ${o.deliveryMsg ? `<p style="font-size:11px;color:var(--text-muted);margin:4px 0;"><i class="fas fa-comment"></i> ${o.deliveryMsg}</p>` : ''}
+          <div style="font-size:10px;color:var(--text-muted);opacity:0.7;margin-top:6px;">
+            Delivered: ${o.deliveryDate ? new Date(o.deliveryDate).toLocaleString() : '—'}
+          </div>
+          <div style="margin-top:10px;display:flex;gap:6px;">
+            <button onclick="copyText('${o.deliveryLogin.replace(/'/g, "\\'")}')" class="btn-sm" style="padding:4px 10px;border:1px solid var(--neon-blue);background:transparent;color:var(--neon-blue);border-radius:4px;cursor:pointer;font-size:11px;">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+            <button onclick="resendLoginWhatsApp('${o.id}')" class="btn-sm" style="padding:4px 10px;border:1px solid #25D366;background:transparent;color:#25D366;border-radius:4px;cursor:pointer;font-size:11px;">
+              <i class="fab fa-whatsapp"></i> Resend
+            </button>
+          </div>
+        </div>`;
+    }
+  }
+
+  html += `</div>
+    <div style="margin-top:24px;padding:16px;background:rgba(0,0,0,0.2);border-radius:8px;">
+      <h4 style="font-size:13px;color:var(--text-muted);margin-bottom:8px;"><i class="fas fa-plus-circle"></i> Send Login Manually</h4>
+      <form onsubmit="manualSendLogin(event)" style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <select id="manualLoginOrder" required style="padding:10px;border-radius:6px;border:1px solid var(--border);background:var(--glass-bg);color:var(--text);">
+            <option value="">— Select Paid Order —</option>
+          </select>
+          <input type="text" id="manualLoginWhatsapp" placeholder="Buyer WhatsApp" style="padding:10px;border-radius:6px;border:1px solid var(--border);background:var(--glass-bg);color:var(--text);">
+        </div>
+        <textarea id="manualLoginCredentials" placeholder="Login Credentials (username / password)" rows="2" required style="padding:10px;border-radius:6px;border:1px solid var(--border);background:var(--glass-bg);color:var(--text);font-family:'Courier New',monospace;"></textarea>
+        <textarea id="manualLoginMessage" placeholder="Optional message to buyer" rows="2" style="padding:10px;border-radius:6px;border:1px solid var(--border);background:var(--glass-bg);color:var(--text);"></textarea>
+        <button type="submit" class="btn-primary" style="align-self:flex-start;"><i class="fas fa-paper-plane"></i> Send Login to Buyer</button>
+      </form>
+    </div>`;
+
+  c.innerHTML = html;
+
+  // Populate the order dropdown
+  populateManualLoginOrders();
+}
+
+function populateManualLoginOrders() {
+  var select = document.getElementById('manualLoginOrder');
+  if (!select) return;
+
+  // Find paid orders that don't have delivery login yet
+  var paidOrders = STATE.orders.filter(function(o) {
+    return (o.status === 'Completed' || o.status === 'PAID' || o.status === 'Paid') && !o.deliveryLogin;
+  });
+
+  select.innerHTML = '<option value="">— Select Paid Order —</option>';
+  paidOrders.forEach(function(o) {
+    var opt = document.createElement('option');
+    opt.value = o.id;
+    opt.textContent = '#' + (o.num || '') + ' — ' + (o.product || 'Product') + ' — ' + (o.buyerName || 'Unknown');
+    select.appendChild(opt);
+  });
+
+  // Auto-fill WhatsApp when order selected
+  select.onchange = function() {
+    var orderId = this.value;
+    if (!orderId) return;
+    var order = STATE.orders.find(function(o) { return o.id === orderId; });
+    if (order && order.buyerWhatsapp) {
+      document.getElementById('manualLoginWhatsapp').value = order.buyerWhatsapp;
+    }
+  };
+}
+
+function manualSendLogin(e) {
+  e.preventDefault();
+
+  var orderId = document.getElementById('manualLoginOrder').value;
+  var wa = document.getElementById('manualLoginWhatsapp').value.trim();
+  var login = document.getElementById('manualLoginCredentials').value.trim();
+  var msg = document.getElementById('manualLoginMessage').value.trim();
+
+  if (!orderId) { showToast('Select an order', 'error'); return; }
+  if (!wa || !login) { showToast('Fill WhatsApp and Login credentials', 'error'); return; }
+
+  db.collection('orders').doc(orderId).update({
+    status: 'Delivered',
+    deliveryLogin: login,
+    deliveryMsg: msg || 'Your login details are ready!',
+    deliveryDate: new Date().toISOString(),
+    buyerWhatsapp: wa
+  }).then(function() {
+    return db.collection('orders').doc(orderId).get();
+  }).then(function(doc) {
+    if (!doc.exists) return;
+    var o = docToObj(doc);
+
+    // Notify user
+    db.collection('notifications').add({
+      uid: o.uid,
+      msg: 'Your order ' + o.product + ' has been delivered! Login: ' + login,
+      type: 'success',
+      read: false,
+      date: new Date().toISOString()
+    });
+
+    showToast('Login sent to buyer successfully!', 'success');
+
+    // Open WhatsApp
+    var clean = wa.replace('+', '').replace(/[^0-9]/g, '');
+    window.open(
+      'https://wa.me/' + clean + '?text=' + encodeURIComponent(
+        (msg || 'Your login details for ' + o.product + ' are ready!') +
+        '\n\nLogin Details:\n' + login +
+        '\n\n- ZEUS Admin'
+      ),
+      '_blank'
+    );
+
+    // Reset form
+    document.getElementById('manualLoginCredentials').value = '';
+    document.getElementById('manualLoginMessage').value = '';
+    document.getElementById('manualLoginWhatsapp').value = '';
+    document.getElementById('manualLoginOrder').value = '';
+  }).catch(function(err) {
+    showToast('Error: ' + err.message, 'error');
+  });
+}
+
+function resendLoginWhatsApp(orderId) {
+  if (!orderId) return;
+
+  db.collection('orders').doc(orderId).get().then(function(doc) {
+    if (!doc.exists) { showToast('Order not found', 'error'); return; }
+    var o = docToObj(doc);
+    if (!o.deliveryLogin) { showToast('No login credentials saved for this order', 'info'); return; }
+
+    var wa = o.buyerWhatsapp || '';
+    if (!wa) { showToast('No WhatsApp number on record', 'error'); return; }
+
+    var clean = wa.replace('+', '').replace(/[^0-9]/g, '');
+    window.open(
+      'https://wa.me/' + clean + '?text=' + encodeURIComponent(
+        (o.deliveryMsg || 'Login details for ' + o.product) +
+        '\n\nLogin:\n' + o.deliveryLogin +
+        '\n\n- ZEUS Admin (Resent)'
+      ),
+      '_blank'
+    );
+    showToast('Login resent via WhatsApp', 'success');
+  }).catch(function(err) {
+    showToast('Error: ' + err.message, 'error');
+  });
+}
+
+// ====== ADD ADMIN LOGINS TAB ======
+function addAdminLoginsTab() {
+  // Find the admin tabs container and add "Logins" tab
+  var adminTabs = document.querySelectorAll('.admin-tab');
+  var exists = false;
+  for (var i = 0; i < adminTabs.length; i++) {
+    if (adminTabs[i].textContent.trim() === 'Logins') { exists = true; break; }
+  }
+  if (exists) return;
+
+  var analyticsTab = null;
+  for (var i = 0; i < adminTabs.length; i++) {
+    if (adminTabs[i].textContent.trim() === 'Analytics') {
+      analyticsTab = adminTabs[i];
+      break;
+    }
+  }
+
+  if (analyticsTab && analyticsTab.parentNode) {
+    var span = document.createElement('span');
+    span.className = 'admin-tab';
+    span.setAttribute('onclick', "switchAdmin('logins')");
+    span.textContent = 'Logins';
+    analyticsTab.parentNode.insertBefore(span, analyticsTab.nextSibling);
+  }
+}
+
+// ====== EXTEND switchAdmin TO HANDLE 'logins' ======
+var originalSwitchAdmin = window.switchAdmin;
+window.switchAdmin = function(tab) {
+  if (tab === 'logins') {
+    // Highlight this tab
+    var tabs = document.querySelectorAll('.admin-tab');
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].style.background = 'transparent';
+      tabs[i].style.color = 'var(--text-muted)';
+    }
+    var activeTab = document.querySelector('.admin-tab[onclick*="logins"]');
+    if (activeTab) {
+      activeTab.style.background = 'var(--neon-blue)';
+      activeTab.style.color = '#000';
+    }
+    adminLogins();
+    return;
+  }
+  if (typeof originalSwitchAdmin === 'function') {
+    originalSwitchAdmin(tab);
+  }
+};
+
+// ====== INIT — Run on page load ======
+(function initLoginBoard() {
+  // Wait for DOM and Firebase to be ready
+  var checkInterval = setInterval(function() {
+    if (document.body && typeof firebase !== 'undefined' && firebase.app) {
+      clearInterval(checkInterval);
+
+      // Inject the login board section into the page
+      injectLoginBoardHTML();
+
+      // Add "My Logins" to the navigation sidebar
+      setTimeout(addLoginBoardToNav, 500);
+
+      // Add "Logins" tab to Admin panel
+      setTimeout(addAdminLoginsTab, 800);
+
+      // Re-render login board when user changes
+      var origOnAuth = firebase.auth().onAuthStateChanged;
+      firebase.auth().onAuthStateChanged = function(user) {
+        if (origOnAuth) {
+          // Call original listeners
+          var listeners = firebase.auth().listeners || [];
+          listeners.forEach(function(l) { if (l !== arguments.callee) l(user); });
+        }
+        if (user && document.getElementById('loginBoardSection')) {
+          setTimeout(renderLoginBoard, 300);
+        }
+      };
+
+      // Hook into existing order listener to refresh login board
+      var origOrderListener = window.setInterval;
+      setInterval(function() {
+        if (STATE._initialized && STATE.currentUser) {
+          renderLoginBoard();
+        }
+      }, 5000);
+
+      // Also hook into existing state changes
+      var origDataLoad = window.loadData || function(){};
+      window.loadData = function() {
+        if (typeof origDataLoad === 'function') origDataLoad();
+        setTimeout(function() {
+          renderLoginBoard();
+          addAdminLoginsTab();
+        }, 1000);
+      };
+
+      console.log('ZEUS Login Board initialized.');
+    }
+  }, 200);
+})();
 })();
